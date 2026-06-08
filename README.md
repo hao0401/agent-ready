@@ -17,14 +17,23 @@ readiness scoring, GitHub annotations, PR artifacts, CI gates, and a public badg
 </p>
 
 <p>
-  <a href="#quick-start"><strong>Quick Start</strong></a> ·
-  <a href="#real-demo"><strong>Demo</strong></a> ·
-  <a href="#github-action"><strong>GitHub Action</strong></a> ·
-  <a href="#command-reference"><strong>Commands</strong></a> ·
+  <a href="#quick-start"><strong>Quick Start</strong></a> |
+  <a href="#real-demo"><strong>Demo</strong></a> |
+  <a href="#github-action"><strong>GitHub Action</strong></a> |
+  <a href="#command-reference"><strong>Commands</strong></a> |
   <a href="#codex-skill"><strong>Codex Skill</strong></a>
 </p>
 
 <img src="assets/terminal-demo.svg" alt="Agent Ready terminal demo" width="920">
+
+<table>
+  <tr>
+    <td align="center"><strong>1 command</strong><br>Generate the agent workspace</td>
+    <td align="center"><strong>5 agent surfaces</strong><br>Codex, Claude, Cursor, Gemini, Copilot</td>
+    <td align="center"><strong>0 runtime deps</strong><br>Small Python CLI</td>
+    <td align="center"><strong>100-point score</strong><br>Readable readiness signal</td>
+  </tr>
+</table>
 
 </div>
 
@@ -41,6 +50,15 @@ GitHub Copilot from the same repository scan.
 | Risky instructions or fake secrets hide in docs | Prompt-injection and secret-looking findings include file and line context |
 | CI failures do not explain what to fix first | Scorecard, summary, PR comment, SARIF, and prioritized fix plan are generated |
 | Gradual adoption is hard to measure | Baselines, diffs, and score ratchets distinguish existing debt from regressions |
+
+## Built For
+
+| Use case | Why it fits |
+| --- | --- |
+| Open-source maintainers | Give contributors and coding agents one trusted workflow before they edit |
+| AI-heavy teams | Keep Codex, Claude, Cursor, Gemini, and Copilot instructions synchronized |
+| Platform and DevEx teams | Add a repeatable readiness check to every repo without custom scripts |
+| Security-conscious repos | Surface prompt-injection-like docs and secret-looking values before agents read them |
 
 ## Quick Start
 
@@ -81,6 +99,20 @@ Visual assets:
 - Static screenshot: [`assets/terminal-demo.png`](assets/terminal-demo.png)
 - Animated terminal GIF: [`assets/terminal-demo.gif`](assets/terminal-demo.gif)
 - Terminal SVG: [`assets/terminal-demo.svg`](assets/terminal-demo.svg)
+
+<details>
+<summary>Full demo artifact list</summary>
+
+- [`examples/demo-output/check.md`](examples/demo-output/check.md)
+- [`examples/demo-output/diff.md`](examples/demo-output/diff.md)
+- [`examples/demo-output/validation-dry-run.md`](examples/demo-output/validation-dry-run.md)
+- [`examples/demo-output/PR_BODY.md`](examples/demo-output/PR_BODY.md)
+- [`examples/demo-output/agent-ready.yml`](examples/demo-output/agent-ready.yml)
+- [`examples/demo-output/agent-ready.config.json`](examples/demo-output/agent-ready.config.json)
+- [`examples/demo-output/baseline.json`](examples/demo-output/baseline.json)
+- [`examples/demo-output/mcp-recommendations.md`](examples/demo-output/mcp-recommendations.md)
+
+</details>
 
 Regenerate the demo:
 
