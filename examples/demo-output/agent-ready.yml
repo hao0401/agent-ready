@@ -1,0 +1,32 @@
+name: Agent Ready
+
+on:
+  pull_request:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  agent-ready:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+      - name: Agent instruction smoke check
+        run: |
+          test -f AGENTS.md
+          test -f .agent-ready/report.md || true
+      - name: Install dependencies
+        run: |
+          pnpm install
+      - name: Detected validation commands
+        run: |
+          pnpm test
+          pnpm build
+          pnpm lint
+          pnpm typecheck

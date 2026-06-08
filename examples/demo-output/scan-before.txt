@@ -1,0 +1,19 @@
+Repo: acme-workbench
+Score: 90/100
+Languages: TypeScript (2), Python (2)
+Frameworks: React, Vite
+Package managers/build tools: pnpm
+
+Commands:
+- Install: `pnpm install`
+- Run locally: `pnpm dev`
+- Test: `pnpm test`
+- Build: `pnpm build`
+- Lint: `pnpm lint`
+- Typecheck: `pnpm typecheck`
+
+Agent files:
+- Not detected
+
+Findings:
+- No findings

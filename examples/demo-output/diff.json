@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-08T17:39:29+00:00",
+  "root": "examples/demo-repo",
+  "repo_name": "acme-workbench",
+  "score": 100,
+  "baseline_score": 100,
+  "score_delta": 0,
+  "baseline_path": "examples/demo-repo/.agent-ready/baseline.json",
+  "config_path": "examples/demo-repo/agent-ready.config.json",
+  "new_findings": [
+    {
+      "severity": "critical",
+      "kind": "secret",
+      "message": "Secret-looking value found; value redacted",
+      "path": "README.md",
+      "line": 16,
+      "fingerprint": "critical|secret|README.md|16|Secret-looking value found; value redacted"
+    }
+  ],
+  "resolved_findings": [],
+  "unchanged_findings": [],
+  "ignored_findings": []
+}

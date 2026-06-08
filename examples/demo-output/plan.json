@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-08T17:39:25+00:00",
+  "repo_name": "acme-workbench",
+  "score": 90,
+  "target_score": 80,
+  "passed": false,
+  "items": [
+    {
+      "id": "agent-instructions-agents-md",
+      "priority": "P0",
+      "category": "agent-instructions",
+      "title": "Create primary AGENTS.md instructions",
+      "why": "Most coding agents look for repository-level instructions before editing.",
+      "action": "Generate AGENTS.md plus companion instructions from the current repository scan.",
+      "command": "agent-ready . --all --badge",
+      "path": "AGENTS.md",
+      "score_impact": 20
+    }
+  ],
+  "next_commands": [
+    "agent-ready . --all --badge",
+    "agent-ready validate . --dry-run",
+    "agent-ready check . --min-score 80 --write-report --write-summary --write-comment --write-plan"
+  ]
+}

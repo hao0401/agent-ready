@@ -1,0 +1,244 @@
+name: Agent Ready
+description: Check whether a repository is ready for AI coding agents.
+branding:
+  icon: shield
+  color: blue
+inputs:
+  path:
+    description: Repository path to check.
+    required: false
+    default: .
+  min-score:
+    description: Minimum required Agent Ready score. Leave blank to use config or the CLI default.
+    required: false
+    default: ""
+  config:
+    description: Optional path to agent-ready.config.json.
+    required: false
+    default: ""
+  baseline:
+    description: Optional path to a baseline JSON file. Use .agent-ready/baseline.json for the default baseline path.
+    required: false
+    default: ""
+  ratchet:
+    description: Fail when the current score is lower than the baseline score.
+    required: false
+    default: "false"
+  require-agents:
+    description: Fail when AGENTS.md is missing.
+    required: false
+    default: "true"
+  format:
+    description: Output format passed to agent-ready check.
+    required: false
+    default: github
+  write-report:
+    description: Write .agent-ready/check.md and .agent-ready/check.json.
+    required: false
+    default: "true"
+  write-summary:
+    description: Write .agent-ready/summary.md and .agent-ready/summary.json.
+    required: false
+    default: "true"
+  write-comment:
+    description: Write .agent-ready/pr-comment.md and .agent-ready/pr-comment.json for PR comment bots.
+    required: false
+    default: "true"
+  write-plan:
+    description: Write .agent-ready/plan.md and .agent-ready/plan.json with prioritized fixes.
+    required: false
+    default: "true"
+  write-diff:
+    description: Write .agent-ready/diff.md and .agent-ready/diff.json when a baseline is available.
+    required: false
+    default: "false"
+  summary:
+    description: Append the check report to the GitHub Actions step summary.
+    required: false
+    default: "true"
+  sarif:
+    description: Write .agent-ready/check.sarif for GitHub code scanning upload.
+    required: false
+    default: "false"
+  post-comment:
+    description: Create or update a pull request comment from .agent-ready/pr-comment.md. Requires pull request write permissions.
+    required: false
+    default: "false"
+  comment-marker:
+    description: Hidden marker used to update the same pull request comment on later runs.
+    required: false
+    default: "<!-- agent-ready-pr-comment -->"
+outputs:
+  passed:
+    description: Whether the Agent Ready check passed.
+    value: ${{ steps.check.outputs.passed }}
+  score:
+    description: Agent Ready score from 0 to 100.
+    value: ${{ steps.check.outputs.score }}
+  report-path:
+    description: Relative path to the markdown check report when write-report is enabled.
+    value: ${{ steps.check.outputs.report-path }}
+  summary-path:
+    description: Relative path to the one-page Agent Ready summary when write-summary is enabled.
+    value: ${{ steps.check.outputs.summary-path }}
+  comment-path:
+    description: Relative path to the PR comment markdown when write-comment is enabled.
+    value: ${{ steps.check.outputs.comment-path }}
+  sarif-path:
+    description: Relative path to the SARIF report when sarif is enabled.
+    value: ${{ steps.check.outputs.sarif-path }}
+  plan-path:
+    description: Relative path to the prioritized fix plan when write-plan is enabled.
+    value: ${{ steps.check.outputs.plan-path }}
+  diff-path:
+    description: Relative path to the baseline diff report when write-diff is enabled.
+    value: ${{ steps.check.outputs.diff-path }}
+  config-path:
+    description: Config path used by the check when one is detected or provided.
+    value: ${{ steps.check.outputs.config-path }}
+  baseline-path:
+    description: Baseline path used by the check when one is detected or provided.
+    value: ${{ steps.check.outputs.baseline-path }}
+  baseline-score:
+    description: Score recorded in the baseline when ratchet or baseline mode is active.
+    value: ${{ steps.check.outputs.baseline-score }}
+  ratchet:
+    description: Whether score ratchet mode was enabled.
+    value: ${{ steps.check.outputs.ratchet }}
+  exit-code:
+    description: Original exit code from agent-ready check.
+    value: ${{ steps.check.outputs.exit-code }}
+runs:
+  using: composite
+  steps:
+    - name: Run Agent Ready check
+      id: check
+      shell: bash
+      env:
+        GITHUB_ACTION_PATH: ${{ github.action_path }}
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_MIN_SCORE: ${{ inputs.min-score }}
+        INPUT_CONFIG: ${{ inputs.config }}
+        INPUT_BASELINE: ${{ inputs.baseline }}
+        INPUT_RATCHET: ${{ inputs.ratchet }}
+        INPUT_REQUIRE_AGENTS: ${{ inputs.require-agents }}
+        INPUT_FORMAT: ${{ inputs.format }}
+        INPUT_WRITE_REPORT: ${{ inputs.write-report }}
+        INPUT_WRITE_SUMMARY: ${{ inputs.write-summary }}
+        INPUT_WRITE_COMMENT: ${{ inputs.write-comment }}
+        INPUT_WRITE_PLAN: ${{ inputs.write-plan }}
+        INPUT_WRITE_DIFF: ${{ inputs.write-diff }}
+        INPUT_SUMMARY: ${{ inputs.summary }}
+        INPUT_SARIF: ${{ inputs.sarif }}
+      run: |
+        set -euo pipefail
+        args=()
+        if [ "$INPUT_REQUIRE_AGENTS" != "true" ]; then
+          args+=(--no-require-agents)
+        fi
+        if [ "$INPUT_MIN_SCORE" != "" ]; then
+          args+=(--min-score "$INPUT_MIN_SCORE")
+        fi
+        if [ "$INPUT_CONFIG" != "" ]; then
+          args+=(--config "$INPUT_CONFIG")
+        fi
+        if [ "$INPUT_BASELINE" != "" ]; then
+          args+=(--baseline "$INPUT_BASELINE")
+        fi
+        if [ "$INPUT_RATCHET" = "true" ]; then
+          args+=(--ratchet)
+        fi
+        if [ "$INPUT_WRITE_REPORT" = "true" ]; then
+          args+=(--write-report)
+        fi
+        if [ "$INPUT_WRITE_SUMMARY" = "true" ]; then
+          args+=(--write-summary)
+        fi
+        if [ "$INPUT_WRITE_COMMENT" = "true" ]; then
+          args+=(--write-comment)
+        fi
+        if [ "$INPUT_WRITE_PLAN" = "true" ]; then
+          args+=(--write-plan)
+        fi
+        if [ "$INPUT_WRITE_DIFF" = "true" ]; then
+          args+=(--write-diff)
+        fi
+        if [ "$INPUT_SUMMARY" = "true" ]; then
+          args+=(--github-summary)
+        fi
+        if [ "$INPUT_SARIF" = "true" ]; then
+          args+=(--write-sarif)
+        fi
+        args+=(--github-output)
+        set +e
+        python -B "$GITHUB_ACTION_PATH/agent-ready.py" check "$INPUT_PATH" --format "$INPUT_FORMAT" "${args[@]}"
+        status=$?
+        set -e
+        echo "exit-code=$status" >> "$GITHUB_OUTPUT"
+    - name: Post Agent Ready PR comment
+      if: ${{ always() && inputs.post-comment == 'true' && (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') }}
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_COMMENT_MARKER: ${{ inputs.comment-marker }}
+        COMMENT_PATH: ${{ steps.check.outputs.comment-path }}
+      run: |
+        set -euo pipefail
+        if [ -z "$COMMENT_PATH" ]; then
+          echo "Agent Ready PR comment was not written; enable write-comment."
+          exit 1
+        fi
+        body_path="${INPUT_PATH%/}/$COMMENT_PATH"
+        if [ "$INPUT_PATH" = "." ]; then
+          body_path="$COMMENT_PATH"
+        fi
+        if [ ! -f "$body_path" ]; then
+          echo "Agent Ready PR comment file not found: $body_path"
+          exit 1
+        fi
+        pr_number="$(python - <<'PY'
+        import json
+        import os
+
+        with open(os.environ["GITHUB_EVENT_PATH"], encoding="utf-8") as handle:
+            event = json.load(handle)
+        print(event.get("pull_request", {}).get("number", ""))
+        PY
+        )"
+        if [ -z "$pr_number" ]; then
+          echo "Pull request number not found in event payload."
+          exit 1
+        fi
+        tmp_body="${RUNNER_TEMP:-.}/agent-ready-pr-comment.md"
+        {
+          printf '%s\n\n' "$INPUT_COMMENT_MARKER"
+          cat "$body_path"
+        } > "$tmp_body"
+        comments_json="${RUNNER_TEMP:-.}/agent-ready-comments.json"
+        gh api "repos/$GITHUB_REPOSITORY/issues/$pr_number/comments?per_page=100" > "$comments_json"
+        comment_id="$(python - "$comments_json" "$INPUT_COMMENT_MARKER" <<'PY'
+        import json
+        import sys
+
+        with open(sys.argv[1], encoding="utf-8") as handle:
+            comments = json.load(handle)
+        marker = sys.argv[2]
+        for comment in comments:
+            if marker in str(comment.get("body", "")):
+                print(comment.get("id", ""))
+                break
+        PY
+        )"
+        if [ -n "$comment_id" ]; then
+          gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" -F "body=@$tmp_body" --silent
+        else
+          gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$pr_number/comments" -F "body=@$tmp_body" --silent
+        fi
+    - name: Fail on Agent Ready check
+      if: ${{ always() }}
+      shell: bash
+      env:
+        CHECK_EXIT_CODE: ${{ steps.check.outputs.exit-code }}
+      run: |
+        exit "${CHECK_EXIT_CODE:-1}"

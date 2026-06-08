@@ -1,0 +1,37 @@
+name: Feature request
+description: Suggest a scanner, generator, command, or workflow improvement.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What agent-readiness gap should this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the command, generated output, scanner rule, or report change.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - CLI command
+        - Scanner rule
+        - Generated instructions
+        - GitHub/CI workflow
+        - Documentation/demo
+        - Packaging/install
+    validations:
+      required: true
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples
+      description: Link to similar tools, expected output, or a repo where this would help.

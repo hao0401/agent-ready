@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-08T17:39:27+00:00",
+  "repo_name": "acme-workbench",
+  "passed": true,
+  "score": 100,
+  "target_score": 80,
+  "badge": "![Agent Ready](https://img.shields.io/badge/Agent%20Ready-100%2F100-brightgreen)",
+  "finding_count": 0,
+  "severity_counts": {},
+  "failures": [],
+  "top_fixes": [],
+  "paths": {
+    "summary": ".agent-ready/summary.md",
+    "report": ".agent-ready/check.md",
+    "scorecard": ".agent-ready/scorecard.md",
+    "plan": ".agent-ready/plan.md",
+    "sarif": ".agent-ready/check.sarif"
+  },
+  "next_commands": [
+    "agent-ready . --all --badge",
+    "agent-ready validate . --dry-run",
+    "agent-ready check . --min-score 80 --write-report --write-summary --write-comment --write-plan"
+  ]
+}

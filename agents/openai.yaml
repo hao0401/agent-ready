@@ -1,0 +1,8 @@
+interface:
+  display_name: "Agent Ready"
+  short_description: "Make repos ready for AI coding agents"
+  brand_color: "#2563EB"
+  default_prompt: "Use $agent-ready to scan this repository, generate agent instruction files, and report its agent readiness score."
+
+policy:
+  allow_implicit_invocation: true

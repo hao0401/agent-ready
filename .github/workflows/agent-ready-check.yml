@@ -1,0 +1,17 @@
+name: Agent Ready Check
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+jobs:
+  agent-ready:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Check bundled demo repository
+        run: python -B agent-ready.py check examples/demo-repo --min-score 80 --format github --write-report --write-summary --write-comment --write-plan --write-sarif --no-require-agents

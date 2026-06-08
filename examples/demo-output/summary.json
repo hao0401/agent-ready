@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-08T17:39:29+00:00",
+  "root": "examples/demo-repo",
+  "repo_name": "acme-workbench",
+  "passed": false,
+  "score": 100,
+  "badge": "![Agent Ready](https://img.shields.io/badge/Agent%20Ready-100%2F100-brightgreen)",
+  "failures": [
+    "critical secret: Secret-looking value found; value redacted (README.md:16)"
+  ],
+  "finding_count": 1,
+  "scorecard_gaps": [
+    {
+      "category": "safety",
+      "check": "No secret findings",
+      "status": "missing",
+      "points": 0,
+      "max_points": 10,
+      "reason": "Secret-looking value detected",
+      "fix": "Remove the value, rotate it if real, and keep only redacted examples."
+    }
+  ],
+  "top_plan": [
+    {
+      "id": "security-readme-md-16",
+      "priority": "P0",
+      "category": "security",
+      "title": "Fix secret finding in README.md:16",
+      "why": "Secret-looking value found; value redacted",
+      "action": "Remove the secret-looking value, rotate it if it was real, and keep only a redacted example.",
+      "path": "README.md",
+      "line": 16,
+      "score_impact": 10
+    }
+  ],
+  "diff": {
+    "score_delta": 0,
+    "new_findings": 1,
+    "resolved_findings": 0,
+    "unchanged_findings": 0,
+    "baseline_path": "examples/demo-repo/.agent-ready/baseline.json"
+  },
+  "commands": {
+    "generate": "agent-ready . --all --badge",
+    "validate": "agent-ready validate . --dry-run",
+    "check": "agent-ready check . --min-score 80 --write-report --write-summary --write-comment --write-scorecard --write-plan",
+    "baseline_diff": "agent-ready diff ."
+  },
+  "paths": {
+    "report": ".agent-ready/report.md",
+    "scorecard": ".agent-ready/scorecard.md",
+    "plan": ".agent-ready/plan.md",
+    "diff": ".agent-ready/diff.md",
+    "check": ".agent-ready/check.md"
+  }
+}

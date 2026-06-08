@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-ready"
+version = "0.1.0"
+description = "Make repositories ready for AI coding agents in one command."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Agent Ready Contributors" }
+]
+keywords = [
+  "ai-agent",
+  "codex",
+  "claude",
+  "cursor",
+  "copilot",
+  "repository",
+  "automation"
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Quality Assurance",
+  "Topic :: Software Development :: Documentation"
+]
+dependencies = []
+
+[project.optional-dependencies]
+demo = ["Pillow>=10"]
+
+[project.scripts]
+agent-ready = "agent_ready.cli:main"
+
+[tool.setuptools]
+packages = ["agent_ready"]
+
+[tool.setuptools.package-data]
+agent_ready = ["*.py"]

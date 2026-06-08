@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-08T17:39:27+00:00",
+  "repo_name": "acme-workbench",
+  "score": 100,
+  "raw_score": 110,
+  "max_score": 100,
+  "raw_max_score": 110,
+  "score_cap_applied": true,
+  "badge": "![Agent Ready](https://img.shields.io/badge/Agent%20Ready-100%2F100-brightgreen)",
+  "categories": {
+    "project-map": {
+      "points": 30,
+      "max_points": 30
+    },
+    "validation": {
+      "points": 30,
+      "max_points": 30
+    },
+    "agent-instructions": {
+      "points": 20,
+      "max_points": 20
+    },
+    "safety": {
+      "points": 30,
+      "max_points": 30
+    }
+  },
+  "items": [
+    {
+      "category": "project-map",
+      "check": "Languages detected",
+      "status": "passed",
+      "points": 10,
+      "max_points": 10,
+      "reason": "Detected repository languages",
+      "fix": "No action needed."
+    },
+    {
+      "category": "project-map",
+      "check": "Config files detected",
+      "status": "passed",
+      "points": 10,
+      "max_points": 10,
+      "reason": "Detected config files",
+      "fix": "No action needed."
+    },
+    {
+      "category": "project-map",
+      "check": "Project map detected",
+      "status": "passed",
+      "points": 10,
+      "max_points": 10,
+      "reason": "Detected project map",
+      "fix": "No action needed."
+    },
+    {
+      "category": "validation",
+      "check": "Test command detected",
+      "status": "passed",
+      "points": 15,
+      "max_points": 15,
+      "reason": "Detected test command",
+      "fix": "No action needed."
+    },
+    {
+      "category": "validation",
+      "check": "Build command detected",
+      "status": "passed",
+      "points": 10,
+      "max_points": 10,
+      "reason": "Detected build command",
+      "fix": "No action needed."
+    },
+    {
+      "category": "validation",
+      "check": "Run command detected",
+      "status": "passed",
+      "points": 5,
+      "max_points": 5,
+      "reason": "Detected run command",
+      "fix": "No action needed."
+    },
+    {
+      "category": "agent-instructions",
+      "check": "Agent instruction coverage",
+      "status": "passed",
+      "points": 20,
+      "max_points": 20,
+      "reason": "Primary AGENTS.md exists",
+      "fix": "Keep AGENTS.md current when commands or repo structure change."
+    },
+    {
+      "category": "safety",
+      "check": "No instruction conflicts",
+      "status": "passed",
+      "points": 10,
+      "max_points": 10,
+      "reason": "No obvious instruction conflicts",
+      "fix": "No action needed."
+    },
+    {
+      "category": "safety",
+      "check": "No prompt-injection findings",
+      "status": "passed",
+      "points": 10,
+      "max_points": 10,
+      "reason": "No obvious prompt-injection findings",
+      "fix": "No action needed."
+    },
+    {
+      "category": "safety",
+      "check": "No secret findings",
+      "status": "passed",
+      "points": 10,
+      "max_points": 10,
+      "reason": "No obvious secret findings",
+      "fix": "No action needed."
+    }
+  ]
+}

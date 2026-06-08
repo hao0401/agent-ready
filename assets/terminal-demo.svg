@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="820" viewBox="0 0 920 820" role="img" aria-label="Agent Ready terminal demo">
+  <rect width="100%" height="100%" rx="14" fill="#0f172a"/>
+  <circle cx="32" cy="30" r="7" fill="#ef4444"/>
+  <circle cx="56" cy="30" r="7" fill="#f59e0b"/>
+  <circle cx="80" cy="30" r="7" fill="#22c55e"/>
+  <text x="116" y="36" fill="#94a3b8" font-family="Consolas, Monaco, monospace" font-size="15">agent-ready demo</text>
+  <g font-family="Consolas, Monaco, monospace" font-size="17">
+    <text x="32" y="66" fill="#dbeafe">$ python agent-ready.py plan examples/demo-repo --min-score 80</text>
+<text x="32" y="90" fill="#d1fae5">+ Wrote a prioritized fix plan for the unprepared repo</text>
+<text x="32" y="114" fill="#dbeafe">$ python agent-ready.py examples/demo-repo --all --badge</text>
+<text x="32" y="138" fill="#e5e7eb">Repo: acme-workbench</text>
+<text x="32" y="162" fill="#e5e7eb">Score: 100/100</text>
+<text x="32" y="186" fill="#e5e7eb">Files:</text>
+<text x="32" y="210" fill="#e5e7eb">- written: AGENTS.md</text>
+<text x="32" y="234" fill="#e5e7eb">- written: CLAUDE.md</text>
+<text x="32" y="258" fill="#e5e7eb">- written: GEMINI.md</text>
+<text x="32" y="282" fill="#e5e7eb">- written: .github/copilot-instructions.md</text>
+<text x="32" y="306" fill="#e5e7eb">- written: .cursor/rules/agent-ready.mdc</text>
+<text x="32" y="330" fill="#e5e7eb">- written: .agent-ready/report.md</text>
+<text x="32" y="354" fill="#e5e7eb">- written: .agent-ready/agent-ready.json</text>
+<text x="32" y="378" fill="#e5e7eb">- written: .agent-ready/scorecard.md</text>
+<text x="32" y="402" fill="#e5e7eb">- written: .agent-ready/scorecard.json</text>
+<text x="32" y="426" fill="#e5e7eb">- written: .agent-ready/summary.md</text>
+<text x="32" y="450" fill="#e5e7eb">- written: .agent-ready/summary.json</text>
+<text x="32" y="474" fill="#d1fae5">+ Generated AGENTS.md, companion instructions, summary, scorecard, badge, CI, PR kit</text>
+<text x="32" y="498" fill="#dbeafe">$ python agent-ready.py check examples/demo-repo --format github --write-report --write-summary --write-comment --write-sarif</text>
+<text x="32" y="522" fill="#d1fae5">+ Wrote CI-ready reports, PR comment, summary, SARIF, and annotation output</text>
+<text x="32" y="546" fill="#dbeafe">$ python agent-ready.py config examples/demo-repo</text>
+<text x="32" y="570" fill="#d1fae5">+ Wrote a reusable agent-ready.config.json policy template</text>
+<text x="32" y="594" fill="#dbeafe">$ python agent-ready.py baseline examples/demo-repo</text>
+<text x="32" y="618" fill="#d1fae5">+ Captured current findings for gradual CI adoption</text>
+<text x="32" y="642" fill="#dbeafe">$ python agent-ready.py diff examples/demo-repo</text>
+<text x="32" y="666" fill="#d1fae5">+ Reported new/resolved findings against the baseline</text>
+<text x="32" y="690" fill="#dbeafe">$ python agent-ready.py snapshot examples/demo-repo --baseline</text>
+<text x="32" y="714" fill="#d1fae5">+ Wrote one summary page with scorecard, top fixes, and diff</text>
+<text x="32" y="738" fill="#dbeafe">$ python agent-ready.py validate examples/demo-repo --dry-run</text>
+<text x="32" y="762" fill="#d1fae5">+ Planned validation commands without executing local scripts</text>
+  </g>
+</svg>

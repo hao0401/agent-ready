@@ -1,0 +1,35 @@
+name: Action Smoke
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+jobs:
+  local-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run local Agent Ready action
+        id: agent_ready
+        uses: ./
+        with:
+          path: examples/demo-repo
+          min-score: "80"
+          require-agents: "false"
+          format: text
+          write-report: "true"
+          write-summary: "true"
+          write-comment: "true"
+          write-plan: "true"
+          sarif: "true"
+      - name: Verify action outputs
+        run: |
+          test "${{ steps.agent_ready.outputs.passed }}" = "true"
+          test -n "${{ steps.agent_ready.outputs.score }}"
+          test "${{ steps.agent_ready.outputs.report-path }}" = ".agent-ready/check.md"
+          test "${{ steps.agent_ready.outputs.summary-path }}" = ".agent-ready/summary.md"
+          test "${{ steps.agent_ready.outputs.comment-path }}" = ".agent-ready/pr-comment.md"
+          test "${{ steps.agent_ready.outputs.plan-path }}" = ".agent-ready/plan.md"
+          test "${{ steps.agent_ready.outputs.sarif-path }}" = ".agent-ready/check.sarif"
+          test "${{ steps.agent_ready.outputs.exit-code }}" = "0"

@@ -1,0 +1,15 @@
+{
+  "check": {
+    "min_score": 80,
+    "require_agents": true,
+    "baseline": ".agent-ready/baseline.json",
+    "ratchet": false
+  },
+  "ignore_findings": [
+    {
+      "kind": "prompt-injection",
+      "path": "docs/known-safe-example.md",
+      "message_contains": "Prompt-injection-like instruction found"
+    }
+  ]
+}

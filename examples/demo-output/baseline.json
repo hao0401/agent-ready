@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-08T17:39:28+00:00",
+  "root": "examples/demo-repo",
+  "repo_name": "acme-workbench",
+  "score": 100,
+  "score_reasons": [
+    "Detected repository languages",
+    "Detected config files",
+    "Detected project map",
+    "Detected test command",
+    "Detected build command",
+    "Detected run command",
+    "Primary AGENTS.md exists",
+    "No obvious instruction conflicts",
+    "No obvious prompt-injection findings",
+    "No obvious secret findings"
+  ],
+  "findings": []
+}

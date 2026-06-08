@@ -1,0 +1,16 @@
+include README.md
+include LICENSE
+include CONTRIBUTING.md
+include SECURITY.md
+include SKILL.md
+include AGENTS.md
+include Makefile
+include agent-ready.py
+include action.yml
+recursive-include agent_ready *.py
+recursive-include scripts *.py
+recursive-include agents *.yaml
+recursive-include assets *.svg *.png *.gif
+recursive-include examples *
+recursive-include .github *.yml
+global-exclude __pycache__ *.py[cod] .DS_Store

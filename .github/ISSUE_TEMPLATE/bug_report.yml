@@ -1,0 +1,44 @@
+name: Bug report
+description: Report a reproducible Agent Ready problem.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please include enough detail to reproduce it.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the observed behavior and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Include the command you ran and a minimal repo shape if possible.
+      placeholder: |
+        1. Run `agent-ready ...`
+        2. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Relevant output
+      description: Paste CLI output. Redact secrets before submitting.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: agent-ready 0.1.0 / Python 3.13 / Windows
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submit checks
+      options:
+        - label: I removed secrets and private paths from this report.
+          required: true

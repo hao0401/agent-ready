@@ -1,0 +1,24 @@
+Repo: acme-workbench
+Score: 100/100
+
+Files:
+- written: AGENTS.md
+- written: CLAUDE.md
+- written: GEMINI.md
+- written: .github/copilot-instructions.md
+- written: .cursor/rules/agent-ready.mdc
+- written: .agent-ready/report.md
+- written: .agent-ready/agent-ready.json
+- written: .agent-ready/scorecard.md
+- written: .agent-ready/scorecard.json
+- written: .agent-ready/summary.md
+- written: .agent-ready/summary.json
+- written: .github/workflows/agent-ready.yml
+- written: .agent-ready/mcp-recommendations.md
+- written: .agent-ready/skills/acme-workbench-workflow/SKILL.md
+- written: .agent-ready/demo.md
+- updated: README.md
+
+Next:
+- Read .agent-ready/report.md
+- Add the badge from the report to README.md if you want a public signal
