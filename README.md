@@ -1,81 +1,88 @@
+<div align="center">
+
 # Agent Ready
 
-Make any repository ready for AI coding agents in one command.
+**Make any repository ready for AI coding agents in one command.**
 
-Turn any repo into an AI-agent workspace: instructions, score, badge, CI, PR kit.
+Turn a normal codebase into an agent-friendly workspace with shared instructions,
+readiness scoring, GitHub annotations, PR artifacts, CI gates, and a public badge.
 
-`agent-ready` scans a repository, generates agent instruction files, and reports
-whether Codex, Claude Code, Cursor, Gemini CLI, or GitHub Copilot can safely work
-inside it.
+<p>
+  <a href="https://github.com/hao0401/agent-ready/actions/workflows/test.yml"><img alt="Test" src="https://github.com/hao0401/agent-ready/actions/workflows/test.yml/badge.svg"></a>
+  <a href="https://github.com/hao0401/agent-ready/actions/workflows/action-smoke.yml"><img alt="Action Smoke" src="https://github.com/hao0401/agent-ready/actions/workflows/action-smoke.yml/badge.svg"></a>
+  <img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-blue">
+  <img alt="No runtime dependencies" src="https://img.shields.io/badge/runtime%20deps-0-brightgreen">
+  <img alt="Safe by default" src="https://img.shields.io/badge/overwrite-safe%20by%20default-0f766e">
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/github/license/hao0401/agent-ready"></a>
+</p>
 
-![Agent Ready](https://img.shields.io/badge/Agent%20Ready-CLI-blue)
-![No Runtime Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)
-![Python](https://img.shields.io/badge/python-3.10%2B-blue)
-![Safe by Default](https://img.shields.io/badge/overwrite-safe%20by%20default-0f766e)
+<p>
+  <a href="#quick-start"><strong>Quick Start</strong></a> ·
+  <a href="#real-demo"><strong>Demo</strong></a> ·
+  <a href="#github-action"><strong>GitHub Action</strong></a> ·
+  <a href="#command-reference"><strong>Commands</strong></a> ·
+  <a href="#codex-skill"><strong>Codex Skill</strong></a>
+</p>
 
-![Agent Ready terminal demo](assets/terminal-demo.svg)
+<img src="assets/terminal-demo.svg" alt="Agent Ready terminal demo" width="920">
 
-## Why Developers Star It
+</div>
 
-- **One command to agent-ready a repo**: generates instructions, score report, badge, CI, PR package, MCP recommendations, and a project-specific Codex skill.
-- **Built for the multi-agent reality**: writes `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, Cursor rules, and GitHub Copilot instructions from the same repo scan.
-- **Catches the weird stuff agents read**: flags prompt-injection text, secret-looking values, stale commands, package-manager conflicts, and monorepo ambiguity.
-- **GitHub-friendly output**: creates a public score badge, before/after demo, PR body, patch file, and workflow starter.
-- **Drop-in GitHub Action**: projects can use the published repository action and get PR annotations without writing install steps.
+## What It Does
+
+`agent-ready` scans a repository and writes the context AI coding agents need
+before they touch code. It supports Codex, Claude Code, Cursor, Gemini CLI, and
+GitHub Copilot from the same repository scan.
+
+| Problem in a normal repo | What Agent Ready adds |
+| --- | --- |
+| Agents guess install, test, build, and lint commands | Detected commands are written into `AGENTS.md` and reports |
+| Tool-specific instruction files drift | Codex, Claude, Gemini, Cursor, and Copilot files share one source scan |
+| Risky instructions or fake secrets hide in docs | Prompt-injection and secret-looking findings include file and line context |
+| CI failures do not explain what to fix first | Scorecard, summary, PR comment, SARIF, and prioritized fix plan are generated |
+| Gradual adoption is hard to measure | Baselines, diffs, and score ratchets distinguish existing debt from regressions |
 
 ## Quick Start
 
-Install from source:
+Install from GitHub:
 
 ```powershell
-pipx install .
-agent-ready --version
-agent-ready C:\path\to\repo --all --badge
+pipx install git+https://github.com/hao0401/agent-ready.git
+agent-ready . --all --badge
 ```
 
-Or run without installation:
+Or run from a cloned checkout:
 
 ```powershell
-python .\agent-ready.py C:\path\to\repo --all --badge
-python -m agent_ready C:\path\to\repo --all --badge
+python .\agent-ready.py . --all --badge
+python -m agent_ready . --all --badge
 ```
 
-That creates the full public-ready artifact set and inserts an Agent Ready score
-badge into `README.md`.
-
-Run it against the bundled example:
-
-```powershell
-python .\agent-ready.py examples\demo-repo --all --badge
-python .\agent-ready.py plan examples\demo-repo --min-score 80
-python .\agent-ready.py doctor examples\demo-repo
-python .\agent-ready.py validate examples\demo-repo --dry-run
-python .\agent-ready.py check examples\demo-repo --min-score 80 --format github --no-require-agents
-```
+That one command creates agent instruction files, score reports, CI artifacts,
+PR-ready output, and an Agent Ready badge for your `README.md`.
 
 ## Real Demo
 
-The repository includes a real example monorepo and generated output:
+The repo includes a reproducible example and generated showcase artifacts.
 
-- Input repo: [`examples/demo-repo`](examples/demo-repo)
-- One-page summary: [`examples/demo-output/summary.md`](examples/demo-output/summary.md)
-- PR comment: [`examples/demo-output/pr-comment.md`](examples/demo-output/pr-comment.md)
-- Generated report: [`examples/demo-output/report.md`](examples/demo-output/report.md)
-- Scorecard: [`examples/demo-output/scorecard.md`](examples/demo-output/scorecard.md)
-- CI check report: [`examples/demo-output/check.md`](examples/demo-output/check.md)
-- SARIF report: [`examples/demo-output/check.sarif`](examples/demo-output/check.sarif)
-- Prioritized fix plan: [`examples/demo-output/plan.md`](examples/demo-output/plan.md)
-- Baseline diff: [`examples/demo-output/diff.md`](examples/demo-output/diff.md)
-- Config template: [`examples/demo-output/agent-ready.config.json`](examples/demo-output/agent-ready.config.json)
-- Baseline file: [`examples/demo-output/baseline.json`](examples/demo-output/baseline.json)
-- Before/after page: [`examples/demo-output/before-after.md`](examples/demo-output/before-after.md)
-- Validation dry run: [`examples/demo-output/validation-dry-run.md`](examples/demo-output/validation-dry-run.md)
-- PR body: [`examples/demo-output/PR_BODY.md`](examples/demo-output/PR_BODY.md)
-- CI workflow: [`examples/demo-output/agent-ready.yml`](examples/demo-output/agent-ready.yml)
+| Start here | Output |
+| --- | --- |
+| [`examples/demo-repo`](examples/demo-repo) | Example repository before Agent Ready |
+| [`examples/demo-output/summary.md`](examples/demo-output/summary.md) | One-page readiness snapshot |
+| [`examples/demo-output/scorecard.md`](examples/demo-output/scorecard.md) | Explainable `0-100` score breakdown |
+| [`examples/demo-output/report.md`](examples/demo-output/report.md) | Full generated readiness report |
+| [`examples/demo-output/plan.md`](examples/demo-output/plan.md) | Prioritized P0/P1/P2 fix plan |
+| [`examples/demo-output/before-after.md`](examples/demo-output/before-after.md) | Before/after transformation |
+| [`examples/demo-output/pr-comment.md`](examples/demo-output/pr-comment.md) | PR bot comment body |
+| [`examples/demo-output/check.sarif`](examples/demo-output/check.sarif) | SARIF output for GitHub code scanning |
+
+Visual assets:
+
 - Static screenshot: [`assets/terminal-demo.png`](assets/terminal-demo.png)
 - Animated terminal GIF: [`assets/terminal-demo.gif`](assets/terminal-demo.gif)
+- Terminal SVG: [`assets/terminal-demo.svg`](assets/terminal-demo.svg)
 
-Regenerate the demo assets:
+Regenerate the demo:
 
 ```powershell
 python -m pip install Pillow
@@ -99,7 +106,71 @@ Files:
 - updated: README.md
 ```
 
+## Differentiated Features
+
+| Area | Feature |
+| --- | --- |
+| Scoring | Visible Agent Ready score, explainable scorecard, README badge, CI threshold |
+| Multi-agent setup | `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, Cursor rules, Copilot instructions |
+| Safety | Safe-by-default writes, prompt-injection scan, redacted secret-looking findings |
+| CI adoption | Baseline mode, baseline diff, score ratchet, GitHub annotations, SARIF |
+| Review workflow | PR comment, PR body, patch package, summary, fix plan |
+| Local guidance | Doctor mode, dry-run validation, command truthing, monorepo map |
+| Extensibility | Project config, MCP recommendations, repo-specific Codex skill generator |
+
+## GitHub Action
+
+The root [`action.yml`](action.yml) is a composite action with typed inputs,
+outputs, PR comments, workflow summaries, SARIF support, and Marketplace
+branding.
+
+```yaml
+name: Agent Ready
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+  issues: write
+  security-events: write
+
+jobs:
+  agent-ready:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hao0401/agent-ready@v1
+        id: agent_ready
+        with:
+          path: .
+          min-score: "80"
+          format: github
+          write-report: "true"
+          write-summary: "true"
+          write-comment: "true"
+          write-plan: "true"
+          write-diff: "true"
+          sarif: "true"
+          post-comment: "true"
+      - name: Upload Agent Ready SARIF
+        if: always() && steps.agent_ready.outputs.sarif-path != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: ${{ steps.agent_ready.outputs.sarif-path }}
+          category: agent-ready
+```
+
+Reusable outputs include `passed`, `score`, `report-path`, `summary-path`,
+`comment-path`, `plan-path`, `diff-path`, `sarif-path`, `config-path`,
+`baseline-path`, `baseline-score`, `ratchet`, and `exit-code`.
+
 ## What It Generates
+
+<details>
+<summary>Generated files</summary>
 
 - `AGENTS.md`
 - `CLAUDE.md`
@@ -131,61 +202,9 @@ Files:
 - `.agent-ready/pr/agent-ready.patch`
 - `.github/workflows/agent-ready.yml`
 
-## Before / After
+</details>
 
-| Before | After |
-| --- | --- |
-| Agents infer commands from scattered files | Commands are detected and written into `AGENTS.md` |
-| Tool-specific instructions drift silently | Codex, Claude, Gemini, Cursor, and Copilot instructions share one repo scan |
-| Readiness score looks like a black box | `.agent-ready/scorecard.md` shows every scoring criterion and fix |
-| Reviewers need one artifact, not five links | `.agent-ready/summary.md` summarizes status, gaps, top fixes, and diff |
-| Prompt-injection and secret-looking docs are easy to miss | High-risk findings are surfaced with file and line |
-| GitHub visitors cannot see agent readiness | README badge and `.agent-ready/report.md` show a score |
-| CI says "failed" but not what to fix first | `.agent-ready/plan.md` gives P0/P1/P2 remediation steps |
-| Gradual adoption hides whether things improved | `.agent-ready/diff.md` shows new, resolved, and unchanged findings |
-| PR authors write setup notes by hand | PR body, patch package, CI workflow, and dry-run validation are generated |
-
-## Differentiated Features
-
-- **Agent readiness score**: a visible `0-100` signal for GitHub READMEs and PRs.
-- **One-page snapshot**: `agent-ready snapshot .` writes `.agent-ready/summary.md` and `.agent-ready/summary.json` for PRs, dashboards, and release notes.
-- **Explainable scorecard**: `agent-ready scorecard .` writes a scoring breakdown with points, status, and next fix per criterion.
-- **Multi-agent output**: one scan creates instructions for Codex, Claude, Gemini, Cursor, and Copilot.
-- **Prompt-injection audit**: flags suspicious instructions in docs agents are likely to read.
-- **Secret-looking scan**: reports file and line while redacting values.
-- **Command truthing**: detects install, run, test, build, lint, and typecheck commands from local files.
-- **Monorepo map**: detects package-level projects under `apps/`, `packages/`, `services/`, and `libs/`.
-- **Project config**: stores CI thresholds, `AGENTS.md` requirements, and known false-positive ignores in `agent-ready.config.json`.
-- **Baseline mode**: records existing findings so CI can block only new agent-readiness regressions during adoption.
-- **Baseline diff**: `agent-ready diff .` compares current findings to `.agent-ready/baseline.json` and reports score delta, new findings, resolved findings, and unchanged debt.
-- **Score ratchet**: `check --ratchet` blocks score regressions below the recorded baseline score.
-- **Dry-run validation**: previews detected validation commands before executing local scripts.
-- **CI check mode**: `agent-ready check .` fails fast on low score, missing `AGENTS.md`, or high-risk findings.
-- **GitHub annotations**: `agent-ready check . --format github` emits `::error` annotations with file and line when available.
-- **Check reports on demand**: `agent-ready check . --write-report --write-summary --write-comment` writes CI artifacts plus reviewer-friendly PR context.
-- **PR comment artifact**: `.agent-ready/pr-comment.md` is short enough for PR bots while preserving score, blockers, top fixes, and artifact links.
-- **Sticky PR comments**: the bundled Action can update the same pull request comment on each run with `post-comment: "true"`.
-- **Prioritized fix plan**: `agent-ready plan .` writes `.agent-ready/plan.md` and `.agent-ready/plan.json` with P0/P1/P2 remediation items.
-- **Action outputs**: the bundled GitHub Action exposes `passed`, `score`, `report-path`, `summary-path`, `comment-path`, `plan-path`, `diff-path`, `sarif-path`, and `exit-code` for later workflow steps.
-- **Marketplace-ready action metadata**: `action.yml` includes composite action inputs, outputs, SARIF support, and GitHub Marketplace branding.
-- **SARIF for code scanning**: `agent-ready check . --write-sarif` writes `.agent-ready/check.sarif` for GitHub code scanning upload.
-- **Doctor mode**: `agent-ready doctor .` checks Python, git, README writability, package managers, commands, agent files, and high-risk findings.
-- **GitHub PR kit**: generates a PR body, patch package, score report, badge, and CI workflow.
-- **Project skill generator**: creates a repo-specific Codex skill under `.agent-ready/skills/`.
-- **MCP recommendations**: suggests useful MCPs from local repo signals.
-
-## Why It Exists
-
-READMEs are written for humans. Coding agents need sharper context:
-
-- How to install, run, test, build, lint, and typecheck.
-- Which directories matter.
-- Which directories should never be edited.
-- Which package manager the repo actually uses.
-- Whether agent instruction files conflict with each other.
-- Whether docs contain prompt-injection or secret-looking text.
-
-## Command Menu
+## Command Reference
 
 Default one-command path:
 
@@ -193,13 +212,16 @@ Default one-command path:
 python .\agent-ready.py C:\path\to\repo --all --badge
 ```
 
+<details>
+<summary>Common commands</summary>
+
 Scan only:
 
 ```powershell
 python .\agent-ready.py scan C:\path\to\repo
 ```
 
-Generate core files only:
+Generate core files:
 
 ```powershell
 python .\agent-ready.py generate C:\path\to\repo
@@ -217,19 +239,19 @@ Write a one-page summary:
 python .\agent-ready.py snapshot C:\path\to\repo
 ```
 
-Write an actionable fix plan without changing source files:
+Create a prioritized fix plan:
 
 ```powershell
 python .\agent-ready.py plan C:\path\to\repo --min-score 80
 ```
 
-Write a starter config:
+Create a starter config:
 
 ```powershell
 python .\agent-ready.py config C:\path\to\repo
 ```
 
-Capture the current findings as a baseline:
+Capture and compare a baseline:
 
 ```powershell
 python .\agent-ready.py baseline C:\path\to\repo
@@ -238,7 +260,7 @@ python .\agent-ready.py check C:\path\to\repo --baseline
 python .\agent-ready.py check C:\path\to\repo --baseline --ratchet
 ```
 
-Preview validation without running repo commands:
+Preview validation commands before running them:
 
 ```powershell
 python .\agent-ready.py validate C:\path\to\repo --dry-run
@@ -254,7 +276,27 @@ python .\agent-ready.py check C:\path\to\repo --min-score 80 --write-sarif
 python .\agent-ready.py check C:\path\to\repo --config agent-ready.config.json
 ```
 
-Config example:
+Diagnose local setup:
+
+```powershell
+python .\agent-ready.py doctor C:\path\to\repo
+```
+
+Create a PR-ready package:
+
+```powershell
+python .\agent-ready.py pr C:\path\to\repo
+```
+
+Overwrite existing generated files only when intended:
+
+```powershell
+python .\agent-ready.py C:\path\to\repo --force
+```
+
+</details>
+
+## Configuration
 
 ```json
 {
@@ -274,105 +316,18 @@ Config example:
 }
 ```
 
-Diagnose local setup before generation:
+## Agent Readiness Score
 
-```powershell
-python .\agent-ready.py doctor C:\path\to\repo
-```
+The report gives a `0-100` score based on:
 
-Use it in GitHub Actions:
+- Detected languages, configs, entry points, and project map.
+- Detected run, test, build, lint, and typecheck commands.
+- Presence of primary agent instructions.
+- Prompt-injection findings.
+- Secret-looking findings.
+- Conflicting package manager or command guidance across agent files.
 
-The root [action.yml](action.yml) is a composite action with Marketplace
-branding, typed inputs, CI summaries, and reusable outputs.
-
-```yaml
-name: Agent Ready
-
-on:
-  pull_request:
-  push:
-    branches: [main, master]
-
-permissions:
-  contents: read
-  issues: write
-  security-events: write
-
-jobs:
-  agent-ready:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: hao0401/agent-ready@v1
-        id: agent_ready
-        with:
-          path: .
-          config: agent-ready.config.json
-          baseline: .agent-ready/baseline.json
-          ratchet: "true"
-          min-score: "80"
-          format: github
-          write-report: "true"
-          write-summary: "true"
-          write-comment: "true"
-          write-plan: "true"
-          write-diff: "true"
-          sarif: "true"
-          post-comment: "true"
-      - name: Print readiness score
-        run: echo "Agent Ready score is ${{ steps.agent_ready.outputs.score }}"
-      - name: Print fix plan path
-        run: echo "Fix plan is ${{ steps.agent_ready.outputs.plan-path }}"
-      - name: Print summary path
-        run: echo "Summary is ${{ steps.agent_ready.outputs.summary-path }}"
-      - name: Print PR comment path
-        run: echo "PR comment is ${{ steps.agent_ready.outputs.comment-path }}"
-      - name: Print baseline diff path
-        run: echo "Baseline diff is ${{ steps.agent_ready.outputs.diff-path }}"
-      - name: Upload Agent Ready SARIF
-        if: always() && steps.agent_ready.outputs.sarif-path != ''
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: ${{ steps.agent_ready.outputs.sarif-path }}
-          category: agent-ready
-```
-
-Before publishing the repository, run:
-
-```powershell
-python -B scripts\dev.py publish-check
-```
-
-That preflight expects a local Git repository, an `origin` remote, no placeholder
-Action path, and an authenticated GitHub CLI session.
-
-Create a PR-ready package:
-
-```powershell
-python .\agent-ready.py pr C:\path\to\repo
-```
-
-Use `--force` only when you want to overwrite existing instruction files.
-
-```powershell
-python .\agent-ready.py C:\path\to\repo --force
-```
-
-`validate` executes detected project commands such as `npm run test` or
-`python -m pytest`. Preview the plan without running commands:
-
-```powershell
-python .\agent-ready.py validate C:\path\to\repo --dry-run
-```
-
-If you run the short entry point from inside the target repository, the path is
-optional:
-
-```powershell
-python C:\path\to\agent-ready\agent-ready.py --all --badge
-```
-
-## Self Check
+## Local Development
 
 From the `agent-ready` directory:
 
@@ -391,14 +346,7 @@ make clean
 make publish-check
 ```
 
-Or run the checks directly:
-
-```powershell
-python -B -m unittest scripts.test_agent_ready
-python -B scripts\release_check.py
-```
-
-## Project Files
+Project references:
 
 - License: [`LICENSE`](LICENSE)
 - Contributing guide: [`CONTRIBUTING.md`](CONTRIBUTING.md)
@@ -406,18 +354,6 @@ python -B scripts\release_check.py
 - Package config: [`pyproject.toml`](pyproject.toml)
 - GitHub Action: [`action.yml`](action.yml)
 - GitHub workflows: [`.github/workflows`](.github/workflows)
-- Local action smoke test: [`.github/workflows/action-smoke.yml`](.github/workflows/action-smoke.yml)
-
-## Agent Readiness Score
-
-The report gives a `0-100` score based on:
-
-- Detected languages, configs, entry points, and project map.
-- Detected run/test/build/lint/typecheck commands.
-- Presence of primary agent instructions.
-- Prompt-injection findings.
-- Secret-looking findings.
-- Conflicting package manager or command guidance across agent files.
 
 ## Codex Skill
 
