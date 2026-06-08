@@ -30,6 +30,8 @@ readiness scoring, GitHub annotations, PR artifacts, CI gates, and a public badg
   <tr>
     <td align="center"><strong>1 command</strong><br>Generate the agent workspace</td>
     <td align="center"><strong>5 agent surfaces</strong><br>Codex, Claude, Cursor, Gemini, Copilot</td>
+  </tr>
+  <tr>
     <td align="center"><strong>0 runtime deps</strong><br>Small Python CLI</td>
     <td align="center"><strong>100-point score</strong><br>Readable readiness signal</td>
   </tr>
