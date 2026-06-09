@@ -2,6 +2,18 @@
 
 All notable changes to Agent Ready are documented here.
 
+## 2.0.0 - 2026-06-09
+
+### Changed
+
+- Breaking safety change: `agent-ready validate` is plan-only by default and no longer executes detected project commands unless `--execute` is passed.
+- `--dry-run` remains as an explicit plan-only alias, and `--dry-run` plus `--execute` is rejected as an invalid combination.
+- Validation reports now record whether commands were actually executed and explain how to opt in safely.
+
+### Documentation
+
+- README, skill instructions, PR package guidance, and demo references now show `--execute` as the only command-running path.
+
 ## 1.2.0 - 2026-06-09
 
 ### Added

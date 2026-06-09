@@ -29,7 +29,7 @@
 ## Useful Commands
 
 - generate: `agent-ready . --all --badge`
-- validate: `agent-ready validate . --dry-run`
+- validate: `agent-ready validate .`
 - check: `agent-ready check . --min-score 80 --write-report --write-summary --write-comment --write-scorecard --write-plan`
 - baseline_diff: `agent-ready diff .`
 

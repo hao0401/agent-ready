@@ -26,5 +26,5 @@
 
 ## Validation
 
-- Run `agent-ready validate <repo> --dry-run` before executing detected commands.
-- Run `agent-ready validate <repo>` only for repositories you trust.
+- Run `agent-ready validate <repo>` to preview detected commands without executing them.
+- Run `agent-ready validate <repo> --execute` only for repositories you trust.

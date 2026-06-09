@@ -1,6 +1,6 @@
 # Agent Ready Validation
 
-Dry run only: no commands were executed.
+Plan only: no commands were executed. Re-run with `--execute` only after you trust the repository commands.
 
 - [planned] `pnpm test` in `examples/demo-repo` (0s)
 - [planned] `pnpm build` in `examples/demo-repo` (0s)

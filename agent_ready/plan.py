@@ -258,7 +258,7 @@ def build_fix_plan(data: dict[str, Any]) -> dict[str, Any]:
 
     next_commands = [
         "agent-ready . --all --badge",
-        "agent-ready validate . --dry-run",
+        "agent-ready validate .",
         "agent-ready check . --min-score 80 --write-report --write-summary --write-comment --write-plan",
     ]
     return {

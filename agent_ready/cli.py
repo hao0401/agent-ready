@@ -536,8 +536,8 @@ def render_pr_summary(scan: RepoScan, statuses: dict[str, str]) -> str:
 
 ## Validation
 
-- Run `agent-ready validate <repo> --dry-run` before executing detected commands.
-- Run `agent-ready validate <repo>` only for repositories you trust.
+- Run `agent-ready validate <repo>` to preview detected commands without executing them.
+- Run `agent-ready validate <repo> --execute` only for repositories you trust.
 """
 
 
@@ -863,7 +863,7 @@ def build_snapshot(data: dict[str, Any], diff: dict[str, Any] | None = None) -> 
         "diff": diff_summary,
         "commands": {
             "generate": "agent-ready . --all --badge",
-            "validate": "agent-ready validate . --dry-run",
+            "validate": "agent-ready validate .",
             "check": "agent-ready check . --min-score 80 --write-report --write-summary --write-comment --write-scorecard --write-plan",
             "baseline_diff": "agent-ready diff .",
         },
@@ -1099,7 +1099,7 @@ def print_doctor(data: dict[str, Any], as_json: bool) -> None:
         print("")
         print("Next:")
         print("- Run `agent-ready . --all --badge` after warnings are resolved or accepted.")
-        print("- Use `agent-ready validate . --dry-run` before executing project commands.")
+        print("- Use `agent-ready validate .` to preview project commands before executing them.")
 
 
 def normalize_argv(argv: list[str] | None) -> list[str] | None:
@@ -1139,7 +1139,7 @@ def main(argv: list[str] | None = None) -> int:
   agent-ready plan .
   agent-ready diff . --baseline
   agent-ready doctor .
-  agent-ready validate . --dry-run
+  agent-ready validate .
   agent-ready config .
   agent-ready baseline .
   agent-ready pr .
@@ -1225,11 +1225,12 @@ def main(argv: list[str] | None = None) -> int:
     gen_parser.add_argument("--minimal", action="store_true", help="Generate only AGENTS.md and .agent-ready core reports.")
     gen_parser.add_argument("--json", action="store_true", help="Print JSON instead of text.")
 
-    validate_parser = subparsers.add_parser("validate", help="Run detected validation commands and write a validation report.")
+    validate_parser = subparsers.add_parser("validate", help="Plan detected validation commands; use --execute to run them.")
     validate_parser.add_argument("repo", nargs="?", type=Path, default=Path("."))
     validate_parser.add_argument("--timeout", type=int, default=120)
     validate_parser.add_argument("--commands", nargs="*", choices=["test", "build", "lint", "typecheck"], default=None)
     validate_parser.add_argument("--dry-run", action="store_true", help="Print and write the validation plan without executing commands.")
+    validate_parser.add_argument("--execute", action="store_true", help="Execute detected validation commands. Use only for trusted repositories.")
     validate_parser.add_argument("--json", action="store_true", help="Print JSON instead of text.")
 
     demo_parser = subparsers.add_parser("demo", help="Generate a before/after demo markdown page.")
@@ -1395,7 +1396,9 @@ def main(argv: list[str] | None = None) -> int:
         print_generate(scan, statuses, as_json=args.json)
         return 0
     if args.command == "validate":
-        data = validate_repo(args.repo, timeout=args.timeout, command_names=args.commands, dry_run=args.dry_run)
+        if args.dry_run and args.execute:
+            raise SystemExit("Use either `--dry-run` or `--execute`, not both.")
+        data = validate_repo(args.repo, timeout=args.timeout, command_names=args.commands, dry_run=args.dry_run, execute=args.execute)
         root = Path(data["scan"]["root"])
         write_file(root / ".agent-ready" / "validation.md", render_validation_report(data), force=True)
         write_file(root / ".agent-ready" / "validation.json", json.dumps(data, indent=2, ensure_ascii=False), force=True)

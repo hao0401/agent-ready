@@ -65,10 +65,11 @@ full GitHub-ready feature set in one pass.
 Use `--force` only when the user clearly wants existing instruction files
 overwritten. Without `--force`, the script skips files that already exist.
 
-`validate` executes detected project commands. Use `--dry-run` first when the
-user wants the validation plan without running local scripts. Never describe the
-safety scan as a replacement for Gitleaks, TruffleHog, CodeQL, dependency audit,
-or human security review.
+`validate` is plan-only by default. Use `--dry-run` when the user wants to make
+that plan-only behavior explicit in scripts, and use `--execute` only after the
+user trusts the repository commands. Never describe the safety scan as a
+replacement for Gitleaks, TruffleHog, CodeQL, dependency audit, or human security
+review.
 
 Use `check` for CI-friendly read-only validation. It returns non-zero when the
 score is below the minimum, `AGENTS.md` is missing, or high/critical findings

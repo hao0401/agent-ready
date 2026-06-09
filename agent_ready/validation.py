@@ -53,26 +53,27 @@ def run_command(command: str, cwd: Path, timeout: int) -> dict[str, Any]:
         }
 
 
-def validation_result(command: str, cwd: Path, timeout: int, dry_run: bool) -> dict[str, Any]:
-    if dry_run:
+def validation_result(command: str, cwd: Path, timeout: int, execute: bool) -> dict[str, Any]:
+    if not execute:
         return {"command": command, "cwd": str(cwd), "exit_code": None, "duration_seconds": 0, "output": "", "status": "planned"}
     return run_command(command, cwd, timeout)
 
 
-def validate_repo(root: Path, timeout: int, command_names: list[str] | None = None, dry_run: bool = False) -> dict[str, Any]:
+def validate_repo(root: Path, timeout: int, command_names: list[str] | None = None, dry_run: bool = False, execute: bool = False) -> dict[str, Any]:
     scan = scan_repo(root)
     root = Path(scan.root)
     names = command_names or ["test", "build", "lint", "typecheck"]
+    should_execute = execute and not dry_run
     results: list[dict[str, Any]] = []
     for name in names:
         for command in scan.commands.get(name, [])[:1]:
-            results.append(validation_result(command, root, timeout, dry_run))
+            results.append(validation_result(command, root, timeout, should_execute))
     for package in scan.packages:
         package_root = root / package["path"]
         for name in names:
             for command in package.get("commands", {}).get(name, [])[:1]:
-                results.append(validation_result(command, package_root, timeout, dry_run))
-    return {"scan": asdict(scan), "results": results}
+                results.append(validation_result(command, package_root, timeout, should_execute))
+    return {"scan": asdict(scan), "results": results, "execute": should_execute}
 
 
 def render_validation_report(data: dict[str, Any]) -> str:
@@ -84,11 +85,10 @@ def render_validation_report(data: dict[str, Any]) -> str:
             f"- [{item['status']}] `{item['command']}` in `{item['cwd']}` ({item['duration_seconds']}s)"
             for item in results
         )
-    caution = (
-        "Dry run only: no commands were executed."
-        if results and all(item["status"] == "planned" for item in results)
-        else "Commands were executed in this repository. Use `--dry-run` first for untrusted code."
-    )
+    if data.get("execute"):
+        caution = "Commands were executed in this repository because `--execute` was requested."
+    else:
+        caution = "Plan only: no commands were executed. Re-run with `--execute` only after you trust the repository commands."
     return f"""# Agent Ready Validation
 
 {caution}

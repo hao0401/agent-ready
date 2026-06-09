@@ -33,7 +33,7 @@
 <text x="32" y="666" fill="#d1fae5">+ Reported new/resolved findings against the baseline</text>
 <text x="32" y="690" fill="#dbeafe">$ python agent-ready.py snapshot examples/demo-repo --baseline</text>
 <text x="32" y="714" fill="#d1fae5">+ Wrote one summary page with scorecard, top fixes, and diff</text>
-<text x="32" y="738" fill="#dbeafe">$ python agent-ready.py validate examples/demo-repo --dry-run</text>
+<text x="32" y="738" fill="#dbeafe">$ python agent-ready.py validate examples/demo-repo</text>
 <text x="32" y="762" fill="#d1fae5">+ Planned validation commands without executing local scripts</text>
   </g>
 </svg>

@@ -265,15 +265,27 @@ class AgentReadyTests(unittest.TestCase):
             self.assertIn("README.md", badge_status)
             self.assertIn("img.shields.io/badge/Agent%20Ready", (root / "README.md").read_text(encoding="utf-8"))
 
-    def test_validate_runs_detected_command(self) -> None:
+    def test_validate_plans_detected_command_by_default(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "package.json").write_text(json.dumps({"scripts": {"test": "definitely-not-a-real-command"}}), encoding="utf-8")
+
+            data = validate_repo(root, timeout=1, command_names=["test"])
+
+            self.assertEqual(len(data["results"]), 1)
+            self.assertEqual(data["results"][0]["status"], "planned")
+            self.assertFalse(data["execute"])
+
+    def test_validate_execute_runs_detected_command(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / "package.json").write_text(json.dumps({"scripts": {"test": "python --version"}}), encoding="utf-8")
 
-            data = validate_repo(root, timeout=30, command_names=["test"])
+            data = validate_repo(root, timeout=30, command_names=["test"], execute=True)
 
             self.assertEqual(len(data["results"]), 1)
             self.assertEqual(data["results"][0]["status"], "passed")
+            self.assertTrue(data["execute"])
 
     def test_validate_dry_run_plans_without_running(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -284,6 +296,17 @@ class AgentReadyTests(unittest.TestCase):
 
             self.assertEqual(len(data["results"]), 1)
             self.assertEqual(data["results"][0]["status"], "planned")
+            self.assertFalse(data["execute"])
+
+    def test_validate_rejects_dry_run_and_execute_together(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "package.json").write_text(json.dumps({"scripts": {"test": "python --version"}}), encoding="utf-8")
+
+            with self.assertRaises(SystemExit) as raised:
+                agent_ready.main(["validate", str(root), "--dry-run", "--execute"])
+
+            self.assertIn("Use either `--dry-run` or `--execute`", str(raised.exception))
 
     def test_check_fails_without_primary_agent_file(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -932,7 +955,7 @@ class AgentReadyTests(unittest.TestCase):
             agent_ready.main(["--version"])
 
         self.assertEqual(raised.exception.code, 0)
-        self.assertIn("agent-ready 1.2.0", output.getvalue())
+        self.assertIn("agent-ready 2.0.0", output.getvalue())
 
     def test_check_passes_after_generation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

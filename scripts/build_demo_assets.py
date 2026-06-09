@@ -65,7 +65,7 @@ def copy_selected(repo: Path) -> None:
         ".agent-ready/baseline.json": "baseline.json",
         "agent-ready.config.json": "agent-ready.config.json",
         ".agent-ready/demo.md": "before-after.md",
-        ".agent-ready/validation.md": "validation-dry-run.md",
+        ".agent-ready/validation.md": "validation-plan.md",
         ".agent-ready/mcp-recommendations.md": "mcp-recommendations.md",
         ".agent-ready/pr/PR_BODY.md": "PR_BODY.md",
         ".github/workflows/agent-ready.yml": "agent-ready.yml",
@@ -183,7 +183,7 @@ def main(argv: list[str] | None = None) -> int:
         run([sys.executable, "-B", str(CLI), "plan", str(repo), "--min-score", "80"], ROOT)
         after = run([sys.executable, "-B", str(CLI), str(repo), "--all", "--badge"], ROOT).stdout
         run([sys.executable, "-B", str(CLI), "check", str(repo), "--min-score", "80", "--format", "github", "--write-report", "--write-summary", "--write-comment", "--write-sarif"], ROOT)
-        run([sys.executable, "-B", str(CLI), "validate", str(repo), "--dry-run"], ROOT)
+        run([sys.executable, "-B", str(CLI), "validate", str(repo)], ROOT)
         run([sys.executable, "-B", str(CLI), "pr", str(repo), "--force"], ROOT)
         run([sys.executable, "-B", str(CLI), "config", str(repo)], ROOT)
         run([sys.executable, "-B", str(CLI), "baseline", str(repo)], ROOT)
@@ -208,7 +208,7 @@ def main(argv: list[str] | None = None) -> int:
         "+ Reported new/resolved findings against the baseline",
         "$ python agent-ready.py snapshot examples/demo-repo --baseline",
         "+ Wrote one summary page with scorecard, top fixes, and diff",
-        "$ python agent-ready.py validate examples/demo-repo --dry-run",
+        "$ python agent-ready.py validate examples/demo-repo",
         "+ Planned validation commands without executing local scripts",
     ]
     (ASSETS / "terminal-demo.svg").write_text(terminal_svg(lines), encoding="utf-8", newline="\n")

@@ -68,7 +68,7 @@ clearly; it does not make model reasoning stronger by itself.
 | Generated files can add noise | Use `--minimal` to generate only `AGENTS.md` and core `.agent-ready` reports |
 | Multi-tool instructions can drift | Keep `AGENTS.md` as the source of truth; companion files point back to it |
 | Lightweight safety scan only | Use it beside TruffleHog, Gitleaks, CodeQL, dependency audit, and normal security review |
-| `validate` executes local commands | Run `agent-ready validate . --dry-run` first, especially on untrusted repositories |
+| `validate` can execute local commands | Default output is plan-only; pass `--execute` only after you trust the repository |
 
 ## Built For
 
@@ -132,7 +132,7 @@ Visual assets:
 
 - [`examples/demo-output/check.md`](examples/demo-output/check.md)
 - [`examples/demo-output/diff.md`](examples/demo-output/diff.md)
-- [`examples/demo-output/validation-dry-run.md`](examples/demo-output/validation-dry-run.md)
+- [`examples/demo-output/validation-plan.md`](examples/demo-output/validation-plan.md)
 - [`examples/demo-output/PR_BODY.md`](examples/demo-output/PR_BODY.md)
 - [`examples/demo-output/agent-ready.yml`](examples/demo-output/agent-ready.yml)
 - [`examples/demo-output/agent-ready.config.json`](examples/demo-output/agent-ready.config.json)
@@ -174,7 +174,7 @@ Files:
 | Safety | Safe-by-default writes, prompt-injection scan, redacted secret-looking findings |
 | CI adoption | Baseline mode, baseline diff, score ratchet, GitHub annotations, SARIF |
 | Review workflow | PR comment, PR body, patch package, summary, fix plan |
-| Local guidance | Doctor mode, dry-run validation, command truthing, monorepo map |
+| Local guidance | Doctor mode, plan-only validation, command truthing, monorepo map |
 | Extensibility | Project config, MCP recommendations, repo-specific Codex skill generator |
 
 ## GitHub Action
@@ -201,7 +201,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: hao0401/agent-ready@v1.2.0
+      - uses: hao0401/agent-ready@v2.0.0
         id: agent_ready
         with:
           path: .
@@ -328,10 +328,16 @@ python .\agent-ready.py check C:\path\to\repo --baseline --ratchet
 Preview validation commands before running them:
 
 ```powershell
-python .\agent-ready.py validate C:\path\to\repo --dry-run
+python .\agent-ready.py validate C:\path\to\repo
 ```
 
-Only run validation without `--dry-run` after you trust the repository commands.
+`validate` is plan-only by default. Use `--dry-run` when you want to make that
+explicit in scripts, and add `--execute` only after you trust the repository
+commands:
+
+```powershell
+python .\agent-ready.py validate C:\path\to\repo --execute
+```
 
 Run a read-only CI check:
 
