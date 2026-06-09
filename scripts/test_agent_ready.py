@@ -318,6 +318,59 @@ class AgentReadyTests(unittest.TestCase):
             self.assertFalse(data["config"]["require_agents"])
             self.assertTrue(data["config"]["path"].endswith("agent-ready.config.json"))
 
+    def test_config_overrides_scan_commands_and_project_map(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "package.json").write_text(
+                json.dumps({"scripts": {"test": "npm test", "build": "npm run bundle"}}),
+                encoding="utf-8",
+            )
+            (root / "agent-ready.config.json").write_text(
+                json.dumps(
+                    {
+                        "overrides": {
+                            "commands": {
+                                "test": ["pnpm -w test"],
+                                "build": ["pnpm -w build"],
+                                "lint": ["pnpm -w lint"],
+                            },
+                            "frameworks": ["Custom Stack"],
+                            "entry_points": ["apps/web/src/main.ts"],
+                            "important_dirs": ["apps/web", "services/api"],
+                            "generated_dirs": ["generated/client"],
+                            "package_managers": ["pnpm"],
+                            "monorepo_hints": ["custom workspace manifest"],
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            scan = scan_repo(root)
+
+            self.assertEqual(scan.commands["test"][0], "pnpm -w test")
+            self.assertIn("npm run test", scan.commands["test"])
+            self.assertEqual(scan.commands["build"][0], "pnpm -w build")
+            self.assertEqual(scan.commands["lint"][0], "pnpm -w lint")
+            self.assertEqual(scan.frameworks[0], "Custom Stack")
+            self.assertEqual(scan.entry_points[0], "apps/web/src/main.ts")
+            self.assertEqual(scan.important_dirs[:2], ["apps/web", "services/api"])
+            self.assertEqual(scan.generated_dirs[0], "generated/client")
+            self.assertEqual(scan.package_managers[0], "pnpm")
+            self.assertEqual(scan.monorepo_hints[0], "custom workspace manifest")
+            self.assertIn("commands", scan.config_overrides)
+
+    def test_config_rejects_invalid_command_override(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "agent-ready.config.json").write_text(
+                json.dumps({"overrides": {"commands": {"deploy": ["ship it"]}}}),
+                encoding="utf-8",
+            )
+
+            with self.assertRaises(SystemExit):
+                scan_repo(root)
+
     def test_check_config_can_ignore_known_finding(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -879,7 +932,7 @@ class AgentReadyTests(unittest.TestCase):
             agent_ready.main(["--version"])
 
         self.assertEqual(raised.exception.code, 0)
-        self.assertIn("agent-ready 1.1.0", output.getvalue())
+        self.assertIn("agent-ready 1.2.0", output.getvalue())
 
     def test_check_passes_after_generation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

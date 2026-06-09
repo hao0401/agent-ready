@@ -64,7 +64,7 @@ clearly; it does not make model reasoning stronger by itself.
 | --- | --- |
 | New project with limited real-world mileage | Marked Beta, release-gated, and designed for fork-first team adoption |
 | Scores can become checklist theater | Score is now strictly 100 points and includes AGENTS.md quality checks, not just file presence |
-| Heuristic framework and command detection | Reports "Not detected" instead of pretending certainty; use config and generated plans to correct misses |
+| Heuristic framework and command detection | Reports "Not detected" instead of pretending certainty; use config overrides and generated plans to correct misses |
 | Generated files can add noise | Use `--minimal` to generate only `AGENTS.md` and core `.agent-ready` reports |
 | Multi-tool instructions can drift | Keep `AGENTS.md` as the source of truth; companion files point back to it |
 | Lightweight safety scan only | Use it beside TruffleHog, Gitleaks, CodeQL, dependency audit, and normal security review |
@@ -201,7 +201,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: hao0401/agent-ready@v1.1.0
+      - uses: hao0401/agent-ready@v1.2.0
         id: agent_ready
         with:
           path: .
@@ -379,9 +379,25 @@ python .\agent-ready.py C:\path\to\repo --force
       "path": "docs/known-safe-example.md",
       "message_contains": "Prompt-injection-like instruction found"
     }
-  ]
+  ],
+  "overrides": {
+    "commands": {
+      "test": ["pnpm -w test"],
+      "build": ["pnpm -w build"],
+      "lint": ["pnpm -w lint"]
+    },
+    "frameworks": ["Custom Stack"],
+    "entry_points": ["apps/web/src/main.ts"],
+    "important_dirs": ["apps/web", "services/api"],
+    "generated_dirs": ["generated/client"],
+    "package_managers": ["pnpm"],
+    "monorepo_hints": ["custom workspace manifest"]
+  }
 }
 ```
+
+`overrides` are prepended to auto-detected facts, so teams can correct heuristic
+misses without hiding what Agent Ready found on its own.
 
 ## Agent Readiness Score
 

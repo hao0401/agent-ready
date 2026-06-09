@@ -2,6 +2,18 @@
 
 All notable changes to Agent Ready are documented here.
 
+## 1.2.0 - 2026-06-09
+
+### Added
+
+- `agent-ready.config.json` scan overrides for custom commands, frameworks, entry points, important directories, generated directories, package managers, and monorepo hints.
+- Regression tests for override precedence and invalid override handling.
+
+### Changed
+
+- The generated config template now includes an explicit `overrides` section so complex repositories can correct heuristic misses without patching the scanner.
+- Demo output uses normalized generated timestamps to reduce noisy showcase diffs.
+
 ## 1.1.0 - 2026-06-09
 
 ### Added

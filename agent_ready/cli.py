@@ -48,6 +48,22 @@ def render_config_template() -> str:
                 "message_contains": "Prompt-injection-like instruction found",
             }
         ],
+        "overrides": {
+            "commands": {
+                "test": [],
+                "build": [],
+                "lint": [],
+                "typecheck": [],
+                "run": [],
+                "install": [],
+            },
+            "frameworks": [],
+            "entry_points": [],
+            "important_dirs": [],
+            "generated_dirs": [],
+            "package_managers": [],
+            "monorepo_hints": [],
+        },
     }
     return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
 

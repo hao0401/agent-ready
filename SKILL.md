@@ -84,9 +84,10 @@ release notes. It writes `.agent-ready/summary.md` and
 baseline diff summary, and useful next commands.
 
 Use `config` to write `agent-ready.config.json` when a project needs stable CI
-thresholds, `AGENTS.md` policy, or documented false-positive ignores. `check`
-auto-detects `agent-ready.config.json` and `.agent-ready/config.json`; use
-`check --config <path>` for a nonstandard location.
+thresholds, `AGENTS.md` policy, documented false-positive ignores, or scan
+overrides for commands/frameworks/entry points that heuristics cannot infer.
+`check` auto-detects `agent-ready.config.json` and `.agent-ready/config.json`;
+use `check --config <path>` for a nonstandard location.
 
 Use `baseline` when a repo has existing findings but should still adopt CI now.
 It writes `.agent-ready/baseline.json`; then `check --baseline` ignores only
@@ -171,7 +172,9 @@ validation commands.
 
 Do not invent commands. Prefer commands detected from package metadata and local
 config files. If detection is uncertain, write the command as "Not detected" and
-tell the user what should be verified manually.
+tell the user what should be verified manually. For known custom commands, add
+them under `overrides.commands` in `agent-ready.config.json` so the correction is
+reviewable and repeatable.
 
 ## Review Rules
 

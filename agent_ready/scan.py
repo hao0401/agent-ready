@@ -72,6 +72,8 @@ CONFIG_CANDIDATES = [
     ".agent-ready/config.json",
 ]
 
+COMMAND_KEYS = ["install", "run", "test", "build", "lint", "typecheck"]
+
 CONFIG_FILES = [
     "package.json",
     "pnpm-lock.yaml",
@@ -196,6 +198,7 @@ class RepoScan:
     agent_files: list[str] = field(default_factory=list)
     monorepo_hints: list[str] = field(default_factory=list)
     packages: list[dict[str, Any]] = field(default_factory=list)
+    config_overrides: dict[str, Any] = field(default_factory=dict)
     findings: list[Finding] = field(default_factory=list)
     agent_instruction_quality: dict[str, Any] = field(default_factory=dict)
     score: int = 0
@@ -251,6 +254,79 @@ def load_json(path: Path) -> dict[str, Any]:
         return json.loads(text)
     except Exception:
         return {}
+
+
+def load_scan_overrides(root: Path) -> dict[str, Any]:
+    for candidate in CONFIG_CANDIDATES:
+        path = root / candidate
+        if not path.exists():
+            continue
+        try:
+            data = json.loads(path.read_text(encoding="utf-8-sig"))
+        except json.JSONDecodeError as exc:
+            raise SystemExit(f"Invalid JSON config {path}: {exc}") from exc
+        if not isinstance(data, dict):
+            raise SystemExit(f"Config file must contain a JSON object: {path}")
+        overrides = data.get("overrides", {})
+        if overrides is None:
+            return {}
+        if not isinstance(overrides, dict):
+            raise SystemExit("Config field `overrides` must be an object")
+        return overrides
+    return {}
+
+
+def config_string_list(value: Any, field_name: str) -> list[str]:
+    if value is None:
+        return []
+    if not isinstance(value, list) or any(not isinstance(item, str) or not item.strip() for item in value):
+        raise SystemExit(f"Config field `overrides.{field_name}` must be a list of non-empty strings")
+    return unique(value)
+
+
+def config_command_overrides(value: Any) -> dict[str, list[str]]:
+    if value is None:
+        return {}
+    if not isinstance(value, dict):
+        raise SystemExit("Config field `overrides.commands` must be an object")
+    commands: dict[str, list[str]] = {}
+    for key, items in value.items():
+        command_name = str(key)
+        if command_name not in COMMAND_KEYS:
+            raise SystemExit(f"Config field `overrides.commands.{command_name}` is not a supported command type")
+        commands[command_name] = config_string_list(items, f"commands.{command_name}")
+    return commands
+
+
+def apply_scan_overrides(scan: RepoScan, overrides: dict[str, Any]) -> None:
+    if not overrides:
+        return
+    applied: dict[str, Any] = {}
+    scalar_lists = {
+        "frameworks": "frameworks",
+        "package_managers": "package_managers",
+        "entry_points": "entry_points",
+        "important_dirs": "important_dirs",
+        "generated_dirs": "generated_dirs",
+        "monorepo_hints": "monorepo_hints",
+    }
+    for config_key, attr_name in scalar_lists.items():
+        if config_key not in overrides:
+            continue
+        values = config_string_list(overrides.get(config_key), config_key)
+        if not values:
+            continue
+        current = getattr(scan, attr_name)
+        setattr(scan, attr_name, unique([*values, *current]))
+        applied[config_key] = values
+    if "commands" in overrides:
+        command_values = config_command_overrides(overrides.get("commands"))
+        if command_values:
+            for key, values in command_values.items():
+                scan.commands[key] = unique([*values, *scan.commands.get(key, [])])
+            scan.commands = {key: values for key, values in scan.commands.items() if values}
+            applied["commands"] = command_values
+    scan.config_overrides = applied
 
 
 def detect_package_manager(root: Path) -> list[str]:
@@ -820,6 +896,7 @@ def scan_repo(root: Path) -> RepoScan:
     root = root.resolve()
     if not root.exists() or not root.is_dir():
         raise SystemExit(f"Repository path does not exist or is not a directory: {root}")
+    overrides = load_scan_overrides(root)
     files = list(iter_files(root))
     managers = detect_package_manager(root)
     scan = RepoScan(
@@ -840,9 +917,9 @@ def scan_repo(root: Path) -> RepoScan:
         findings=[],
     )
     scan.important_dirs, scan.generated_dirs = detect_dirs(root)
+    apply_scan_overrides(scan, overrides)
     scan.findings.extend(scan_text_findings(root, files))
     scan.findings.extend(lint_agent_conflicts(root, scan.package_managers))
     scan.agent_instruction_quality = evaluate_agent_instruction_quality(root, scan)
     scan.score, scan.score_reasons = compute_score(scan)
     return scan
-

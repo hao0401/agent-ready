@@ -37,6 +37,7 @@ def repo_scan_from_dict(data: dict[str, Any]) -> RepoScan:
         agent_files=list(data.get("agent_files", [])),
         monorepo_hints=list(data.get("monorepo_hints", [])),
         packages=list(data.get("packages", [])),
+        config_overrides=dict(data.get("config_overrides", {})),
         findings=findings,
         agent_instruction_quality=dict(data.get("agent_instruction_quality", {})),
         score=int(data.get("score", 0)),
