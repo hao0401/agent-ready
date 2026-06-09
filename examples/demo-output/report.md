@@ -13,6 +13,7 @@ Score: **100/100**
 - Detected build command
 - Detected run command
 - Primary AGENTS.md exists
+- AGENTS.md covers commands, project map, safety, and stays concise
 - No obvious instruction conflicts
 - No obvious prompt-injection findings
 - No obvious secret findings

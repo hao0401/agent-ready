@@ -197,6 +197,7 @@ class RepoScan:
     monorepo_hints: list[str] = field(default_factory=list)
     packages: list[dict[str, Any]] = field(default_factory=list)
     findings: list[Finding] = field(default_factory=list)
+    agent_instruction_quality: dict[str, Any] = field(default_factory=dict)
     score: int = 0
     score_reasons: list[str] = field(default_factory=list)
 
@@ -606,6 +607,63 @@ def lint_agent_conflicts(root: Path, package_managers: list[str]) -> list[Findin
     return findings
 
 
+def evaluate_agent_instruction_quality(root: Path, scan: RepoScan) -> dict[str, Any]:
+    path = root / "AGENTS.md"
+    checks: list[dict[str, Any]] = []
+    if not path.exists():
+        return {
+            "score": 0,
+            "max_score": 8,
+            "checks": [
+                {
+                    "name": "AGENTS.md exists",
+                    "passed": False,
+                    "reason": "Primary agent instruction file is missing.",
+                }
+            ],
+        }
+    text = read_text(path, max_bytes=200_000)
+    lower = text.lower()
+    detected_commands = [
+        command
+        for name in ["install", "run", "test", "build", "lint", "typecheck"]
+        for command in scan.commands.get(name, [])[:2]
+    ]
+    mentioned_commands = [command for command in detected_commands if command.lower() in lower]
+    check_specs = [
+        (
+            "Detected commands are documented",
+            bool(detected_commands) and len(mentioned_commands) >= min(2, len(detected_commands)),
+            "Mention at least the primary detected validation/setup commands in AGENTS.md.",
+        ),
+        (
+            "Project map is documented",
+            "project map" in lower and ("entry point" in lower or "important directories" in lower),
+            "Include entry points, important directories, and package-level project context.",
+        ),
+        (
+            "Safety rules are documented",
+            "safety" in lower and ("secret" in lower or "generated" in lower),
+            "Document secret handling, generated directories, and validation expectations.",
+        ),
+        (
+            "Instructions are concise enough to maintain",
+            len(text.split()) <= 1200,
+            "Keep AGENTS.md concise so it can be kept current as the repository changes.",
+        ),
+    ]
+    for name, passed, fix in check_specs:
+        checks.append({"name": name, "passed": passed, "reason": "Passed." if passed else fix})
+    passed_count = sum(1 for check in checks if check["passed"])
+    return {
+        "score": passed_count * 2,
+        "max_score": 8,
+        "checks": checks,
+        "documented_commands": mentioned_commands,
+        "detected_commands": detected_commands,
+    }
+
+
 def scorecard_item(
     category: str,
     check: str,
@@ -641,13 +699,22 @@ def scorecard_items(scan: RepoScan) -> list[dict[str, Any]]:
     agent_reason = "No agent instruction file detected"
     agent_fix = "Run `agent-ready . --all --badge` to generate AGENTS.md and companion instruction files."
     if "AGENTS.md" in scan.agent_files:
-        agent_points = 20
+        agent_points = 12
         agent_reason = "Primary AGENTS.md exists"
         agent_fix = "Keep AGENTS.md current when commands or repo structure change."
     elif scan.agent_files:
-        agent_points = 10
+        agent_points = 6
         agent_reason = "Some agent instruction file exists"
         agent_fix = "Add AGENTS.md as the primary cross-agent instruction file."
+    quality = scan.agent_instruction_quality or {}
+    quality_points = int(quality.get("score", 0) or 0)
+    quality_max = int(quality.get("max_score", 8) or 8)
+    quality_reason = "AGENTS.md covers commands, project map, safety, and stays concise"
+    quality_fix = "Mention detected commands, project map, safety rules, and keep AGENTS.md maintainable."
+    if quality_points <= 0:
+        quality_reason = "AGENTS.md quality checks did not pass"
+    elif quality_points < quality_max:
+        quality_reason = "AGENTS.md passed some quality checks"
     return [
         scorecard_item(
             "project-map",
@@ -700,17 +767,26 @@ def scorecard_items(scan: RepoScan) -> list[dict[str, Any]]:
         scorecard_item(
             "agent-instructions",
             "Agent instruction coverage",
-            agent_points == 20,
-            20,
+            agent_points == 12,
+            12,
             agent_reason,
             agent_fix,
             awarded=agent_points,
         ),
         scorecard_item(
+            "agent-instructions",
+            "Agent instruction quality",
+            quality_points >= quality_max,
+            quality_max,
+            quality_reason,
+            quality_fix,
+            awarded=quality_points,
+        ),
+        scorecard_item(
             "safety",
             "No instruction conflicts",
             not any(f.kind == "conflict" for f in scan.findings),
-            10,
+            6,
             "No obvious instruction conflicts" if not any(f.kind == "conflict" for f in scan.findings) else "Instruction conflicts detected",
             "Align agent files with detected package managers and validation commands.",
         ),
@@ -718,7 +794,7 @@ def scorecard_items(scan: RepoScan) -> list[dict[str, Any]]:
             "safety",
             "No prompt-injection findings",
             not any(f.kind == "prompt-injection" for f in scan.findings),
-            10,
+            7,
             "No obvious prompt-injection findings" if not any(f.kind == "prompt-injection" for f in scan.findings) else "Prompt-injection-like text detected",
             "Rewrite or remove suspicious instructions from files agents may read.",
         ),
@@ -726,7 +802,7 @@ def scorecard_items(scan: RepoScan) -> list[dict[str, Any]]:
             "safety",
             "No secret findings",
             not any(f.kind == "secret" for f in scan.findings),
-            10,
+            7,
             "No obvious secret findings" if not any(f.kind == "secret" for f in scan.findings) else "Secret-looking value detected",
             "Remove the value, rotate it if real, and keep only redacted examples.",
         ),
@@ -766,7 +842,7 @@ def scan_repo(root: Path) -> RepoScan:
     scan.important_dirs, scan.generated_dirs = detect_dirs(root)
     scan.findings.extend(scan_text_findings(root, files))
     scan.findings.extend(lint_agent_conflicts(root, scan.package_managers))
+    scan.agent_instruction_quality = evaluate_agent_instruction_quality(root, scan)
     scan.score, scan.score_reasons = compute_score(scan)
     return scan
-
 

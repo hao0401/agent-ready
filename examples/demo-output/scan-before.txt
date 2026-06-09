@@ -1,5 +1,5 @@
 Repo: acme-workbench
-Score: 90/100
+Score: 80/100
 Languages: TypeScript (2), Python (2)
 Frameworks: React, Vite
 Package managers/build tools: pnpm

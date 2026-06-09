@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-06-08T17:39:29+00:00",
+  "generated_at": "2026-06-09T00:00:00+00:00",
   "root": "examples/demo-repo",
   "repo_name": "acme-workbench",
-  "score": 100,
+  "score": 93,
   "baseline_score": 100,
-  "score_delta": 0,
+  "score_delta": -7,
   "baseline_path": "examples/demo-repo/.agent-ready/baseline.json",
   "config_path": "examples/demo-repo/agent-ready.config.json",
   "new_findings": [

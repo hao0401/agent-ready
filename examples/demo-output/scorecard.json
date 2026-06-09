@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "generated_at": "2026-06-08T17:39:27+00:00",
+  "generated_at": "2026-06-09T00:00:00+00:00",
   "repo_name": "acme-workbench",
   "score": 100,
-  "raw_score": 110,
+  "raw_score": 100,
   "max_score": 100,
-  "raw_max_score": 110,
-  "score_cap_applied": true,
+  "raw_max_score": 100,
+  "score_cap_applied": false,
   "badge": "![Agent Ready](https://img.shields.io/badge/Agent%20Ready-100%2F100-brightgreen)",
   "categories": {
     "project-map": {
@@ -22,8 +22,8 @@
       "max_points": 20
     },
     "safety": {
-      "points": 30,
-      "max_points": 30
+      "points": 20,
+      "max_points": 20
     }
   },
   "items": [
@@ -85,17 +85,26 @@
       "category": "agent-instructions",
       "check": "Agent instruction coverage",
       "status": "passed",
-      "points": 20,
-      "max_points": 20,
+      "points": 12,
+      "max_points": 12,
       "reason": "Primary AGENTS.md exists",
       "fix": "Keep AGENTS.md current when commands or repo structure change."
+    },
+    {
+      "category": "agent-instructions",
+      "check": "Agent instruction quality",
+      "status": "passed",
+      "points": 8,
+      "max_points": 8,
+      "reason": "AGENTS.md covers commands, project map, safety, and stays concise",
+      "fix": "No action needed."
     },
     {
       "category": "safety",
       "check": "No instruction conflicts",
       "status": "passed",
-      "points": 10,
-      "max_points": 10,
+      "points": 6,
+      "max_points": 6,
       "reason": "No obvious instruction conflicts",
       "fix": "No action needed."
     },
@@ -103,8 +112,8 @@
       "category": "safety",
       "check": "No prompt-injection findings",
       "status": "passed",
-      "points": 10,
-      "max_points": 10,
+      "points": 7,
+      "max_points": 7,
       "reason": "No obvious prompt-injection findings",
       "fix": "No action needed."
     },
@@ -112,8 +121,8 @@
       "category": "safety",
       "check": "No secret findings",
       "status": "passed",
-      "points": 10,
-      "max_points": 10,
+      "points": 7,
+      "max_points": 7,
       "reason": "No obvious secret findings",
       "fix": "No action needed."
     }

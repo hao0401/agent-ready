@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-08T17:39:28+00:00",
+  "generated_at": "2026-06-09T00:00:00+00:00",
   "root": "examples/demo-repo",
   "repo_name": "acme-workbench",
   "score": 100,
@@ -12,6 +12,7 @@
     "Detected build command",
     "Detected run command",
     "Primary AGENTS.md exists",
+    "AGENTS.md covers commands, project map, safety, and stays concise",
     "No obvious instruction conflicts",
     "No obvious prompt-injection findings",
     "No obvious secret findings"

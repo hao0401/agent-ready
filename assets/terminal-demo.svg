@@ -12,12 +12,12 @@
 <text x="32" y="162" fill="#e5e7eb">Score: 100/100</text>
 <text x="32" y="186" fill="#e5e7eb">Files:</text>
 <text x="32" y="210" fill="#e5e7eb">- written: AGENTS.md</text>
-<text x="32" y="234" fill="#e5e7eb">- written: CLAUDE.md</text>
-<text x="32" y="258" fill="#e5e7eb">- written: GEMINI.md</text>
-<text x="32" y="282" fill="#e5e7eb">- written: .github/copilot-instructions.md</text>
-<text x="32" y="306" fill="#e5e7eb">- written: .cursor/rules/agent-ready.mdc</text>
-<text x="32" y="330" fill="#e5e7eb">- written: .agent-ready/report.md</text>
-<text x="32" y="354" fill="#e5e7eb">- written: .agent-ready/agent-ready.json</text>
+<text x="32" y="234" fill="#e5e7eb">- written: .agent-ready/report.md</text>
+<text x="32" y="258" fill="#e5e7eb">- written: .agent-ready/agent-ready.json</text>
+<text x="32" y="282" fill="#e5e7eb">- written: CLAUDE.md</text>
+<text x="32" y="306" fill="#e5e7eb">- written: GEMINI.md</text>
+<text x="32" y="330" fill="#e5e7eb">- written: .github/copilot-instructions.md</text>
+<text x="32" y="354" fill="#e5e7eb">- written: .cursor/rules/agent-ready.mdc</text>
 <text x="32" y="378" fill="#e5e7eb">- written: .agent-ready/scorecard.md</text>
 <text x="32" y="402" fill="#e5e7eb">- written: .agent-ready/scorecard.json</text>
 <text x="32" y="426" fill="#e5e7eb">- written: .agent-ready/summary.md</text>

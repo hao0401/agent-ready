@@ -55,6 +55,10 @@ python .\agent-ready.py baseline <repo-path>
 python .\agent-ready.py pr <repo-path>
 ```
 
+Use `python .\agent-ready.py <repo-path> --minimal --badge` when introducing the
+tool to an existing repository and the user wants low-noise output. This writes
+`AGENTS.md` and core `.agent-ready` reports without companion tool files.
+
 Use `python .\agent-ready.py <repo-path> --all --badge` when the user wants the
 full GitHub-ready feature set in one pass.
 
@@ -62,7 +66,9 @@ Use `--force` only when the user clearly wants existing instruction files
 overwritten. Without `--force`, the script skips files that already exist.
 
 `validate` executes detected project commands. Use `--dry-run` first when the
-user wants the validation plan without running local scripts.
+user wants the validation plan without running local scripts. Never describe the
+safety scan as a replacement for Gitleaks, TruffleHog, CodeQL, dependency audit,
+or human security review.
 
 Use `check` for CI-friendly read-only validation. It returns non-zero when the
 score is below the minimum, `AGENTS.md` is missing, or high/critical findings
@@ -181,8 +187,9 @@ When auditing agent instructions, check for:
 
 ## Scoring Guidance
 
-Treat the score as a product signal, not a perfect security grade. Explain the
-highest-impact fixes before low-impact polish. A good score requires:
+Treat the score as a product signal, not a perfect security grade or proof that
+the agent will reason better. Explain the highest-impact fixes before low-impact
+polish. A good score requires:
 
 - Clear project map.
 - Correct test/build/run commands.

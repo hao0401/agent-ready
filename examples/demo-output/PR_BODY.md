@@ -9,12 +9,12 @@
 ## Files
 
 - written: `AGENTS.md`
+- written: `.agent-ready/report.md`
+- written: `.agent-ready/agent-ready.json`
 - written: `CLAUDE.md`
 - written: `GEMINI.md`
 - written: `.github/copilot-instructions.md`
 - written: `.cursor/rules/agent-ready.mdc`
-- written: `.agent-ready/report.md`
-- written: `.agent-ready/agent-ready.json`
 - written: `.agent-ready/scorecard.md`
 - written: `.agent-ready/scorecard.json`
 - written: `.agent-ready/summary.md`
@@ -26,4 +26,5 @@
 
 ## Validation
 
-- Run `python agent-ready.py validate <repo>` after applying this patch.
+- Run `agent-ready validate <repo> --dry-run` before executing detected commands.
+- Run `agent-ready validate <repo>` only for repositories you trust.

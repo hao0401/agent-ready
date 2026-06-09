@@ -2,10 +2,10 @@
 
 - Repository: `acme-workbench`
 - Status: `failed`
-- Score: `100/100`
+- Score: `93/100`
 - Findings: `1`
 
-![Agent Ready](https://img.shields.io/badge/Agent%20Ready-100%2F100-brightgreen)
+![Agent Ready](https://img.shields.io/badge/Agent%20Ready-93%2F100-brightgreen)
 
 ## Failures
 
@@ -13,7 +13,7 @@
 
 ## Scorecard Gaps
 
-- [missing] No secret findings: 0/10 - Remove the value, rotate it if real, and keep only redacted examples.
+- [missing] No secret findings: 0/7 - Remove the value, rotate it if real, and keep only redacted examples.
 
 ## Top Fixes
 
@@ -21,7 +21,7 @@
 
 ## Baseline Diff
 
-- Score delta: `0`
+- Score delta: `-7`
 - New findings: `1`
 - Resolved findings: `0`
 - Still present: `0`

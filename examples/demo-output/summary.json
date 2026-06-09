@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generated_at": "2026-06-08T17:39:29+00:00",
+  "generated_at": "2026-06-09T00:00:00+00:00",
   "root": "examples/demo-repo",
   "repo_name": "acme-workbench",
   "passed": false,
-  "score": 100,
-  "badge": "![Agent Ready](https://img.shields.io/badge/Agent%20Ready-100%2F100-brightgreen)",
+  "score": 93,
+  "badge": "![Agent Ready](https://img.shields.io/badge/Agent%20Ready-93%2F100-brightgreen)",
   "failures": [
     "critical secret: Secret-looking value found; value redacted (README.md:16)"
   ],
@@ -16,7 +16,7 @@
       "check": "No secret findings",
       "status": "missing",
       "points": 0,
-      "max_points": 10,
+      "max_points": 7,
       "reason": "Secret-looking value detected",
       "fix": "Remove the value, rotate it if real, and keep only redacted examples."
     }
@@ -35,7 +35,7 @@
     }
   ],
   "diff": {
-    "score_delta": 0,
+    "score_delta": -7,
     "new_findings": 1,
     "resolved_findings": 0,
     "unchanged_findings": 0,

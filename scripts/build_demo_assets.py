@@ -87,6 +87,7 @@ def sanitize_demo_text(text: str, repo: Path) -> str:
     normalized = normalized.replace(str(repo).replace("\\", "//"), stable_root)
     normalized = normalized.replace("\\", "/")
     normalized = re.sub(r"[A-Z]:/+Users/[^`\"\s)]+/agent-ready-demo-[^`\"\s)]+/acme-workbench", stable_root, normalized)
+    normalized = re.sub(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+00:00", "2026-06-09T00:00:00+00:00", normalized)
     while f"{stable_root}//" in normalized:
         normalized = normalized.replace(f"{stable_root}//", f"{stable_root}/")
     normalized = normalized.replace("/.agent-ready//", "/.agent-ready/")

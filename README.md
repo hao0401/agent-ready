@@ -46,6 +46,10 @@ readiness scoring, GitHub annotations, PR artifacts, CI gates, and a public badg
 before they touch code. It supports Codex, Claude Code, Cursor, Gemini CLI, and
 GitHub Copilot from the same repository scan.
 
+It is a repository-readiness tool, not an agent framework or automation
+platform. It helps agents see project facts, risks, and validation commands more
+clearly; it does not make model reasoning stronger by itself.
+
 | Problem in a normal repo | What Agent Ready adds |
 | --- | --- |
 | Agents guess install, test, build, and lint commands | Detected commands are written into `AGENTS.md` and reports |
@@ -53,6 +57,18 @@ GitHub Copilot from the same repository scan.
 | Risky instructions or fake secrets hide in docs | Prompt-injection and secret-looking findings include file and line context |
 | CI failures do not explain what to fix first | Scorecard, summary, PR comment, SARIF, and prioritized fix plan are generated |
 | Gradual adoption is hard to measure | Baselines, diffs, and score ratchets distinguish existing debt from regressions |
+
+## Honest Limits
+
+| Limit | How Agent Ready handles it |
+| --- | --- |
+| New project with limited real-world mileage | Marked Beta, release-gated, and designed for fork-first team adoption |
+| Scores can become checklist theater | Score is now strictly 100 points and includes AGENTS.md quality checks, not just file presence |
+| Heuristic framework and command detection | Reports "Not detected" instead of pretending certainty; use config and generated plans to correct misses |
+| Generated files can add noise | Use `--minimal` to generate only `AGENTS.md` and core `.agent-ready` reports |
+| Multi-tool instructions can drift | Keep `AGENTS.md` as the source of truth; companion files point back to it |
+| Lightweight safety scan only | Use it beside TruffleHog, Gitleaks, CodeQL, dependency audit, and normal security review |
+| `validate` executes local commands | Run `agent-ready validate . --dry-run` first, especially on untrusted repositories |
 
 ## Built For
 
@@ -72,12 +88,20 @@ pipx install git+https://github.com/hao0401/agent-ready.git
 agent-ready . --all --badge
 ```
 
+Prefer the low-noise path when introducing it to an existing repository:
+
+```powershell
+agent-ready . --minimal --badge
+```
+
 Or run from a cloned checkout:
 
 ```powershell
 python .\agent-ready.py . --all --badge
 python -m agent_ready . --all --badge
 ```
+
+On macOS or Linux, use `python3` if `python` is not installed.
 
 That one command creates agent instruction files, score reports, CI artifacts,
 PR-ready output, and an Agent Ready badge for your `README.md`.
@@ -177,7 +201,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: hao0401/agent-ready@v1
+      - uses: hao0401/agent-ready@v1.1.0
         id: agent_ready
         with:
           path: .
@@ -247,6 +271,12 @@ Default one-command path:
 python .\agent-ready.py C:\path\to\repo --all --badge
 ```
 
+Low-noise path:
+
+```powershell
+python .\agent-ready.py C:\path\to\repo --minimal --badge
+```
+
 <details>
 <summary>Common commands</summary>
 
@@ -300,6 +330,8 @@ Preview validation commands before running them:
 ```powershell
 python .\agent-ready.py validate C:\path\to\repo --dry-run
 ```
+
+Only run validation without `--dry-run` after you trust the repository commands.
 
 Run a read-only CI check:
 

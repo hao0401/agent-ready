@@ -84,7 +84,14 @@ def render_validation_report(data: dict[str, Any]) -> str:
             f"- [{item['status']}] `{item['command']}` in `{item['cwd']}` ({item['duration_seconds']}s)"
             for item in results
         )
+    caution = (
+        "Dry run only: no commands were executed."
+        if results and all(item["status"] == "planned" for item in results)
+        else "Commands were executed in this repository. Use `--dry-run` first for untrusted code."
+    )
     return f"""# Agent Ready Validation
+
+{caution}
 
 {body}
 """

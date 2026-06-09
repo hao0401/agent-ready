@@ -1,7 +1,7 @@
 # Agent Ready Fix Plan
 
 - Repository: `acme-workbench`
-- Score: `90/100`
+- Score: `80/100`
 - Target score: `80/100`
 - Check passed: `false`
 

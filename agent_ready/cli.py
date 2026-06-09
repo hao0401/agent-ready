@@ -78,6 +78,10 @@ def command_block(commands: dict[str, list[str]]) -> str:
     return "\n".join(lines)
 
 
+def python_command_note() -> str:
+    return "If `python` is not available on macOS or Linux, run the same command with `python3`."
+
+
 def list_or_none(items: list[str], limit: int = 12) -> str:
     if not items:
         return "- Not detected"
@@ -160,6 +164,8 @@ Package-level projects:
 If a command is marked "Not detected", inspect package metadata or CI config before
 claiming it works.
 
+{python_command_note()}
+
 ## Agent Workflow
 
 1. Read this file before editing.
@@ -199,6 +205,8 @@ Project map:
 
 Before finishing changes, run the most specific relevant validation command that
 is available. If validation cannot be run, explain why.
+
+{python_command_note()}
 """
 
 
@@ -512,7 +520,8 @@ def render_pr_summary(scan: RepoScan, statuses: dict[str, str]) -> str:
 
 ## Validation
 
-- Run `python agent-ready.py validate <repo>` after applying this patch.
+- Run `agent-ready validate <repo> --dry-run` before executing detected commands.
+- Run `agent-ready validate <repo>` only for repositories you trust.
 """
 
 
@@ -559,17 +568,22 @@ def generate_extra_files(
     return statuses
 
 
-def generate_files(root: Path, force: bool) -> tuple[RepoScan, dict[str, str]]:
+def generate_files(root: Path, force: bool, companion: bool = True) -> tuple[RepoScan, dict[str, str]]:
     scan = scan_repo(root)
     outputs = {
         "AGENTS.md": render_agents_md(scan),
-        "CLAUDE.md": render_companion(scan, "Claude Code"),
-        "GEMINI.md": render_companion(scan, "Gemini CLI"),
-        ".github/copilot-instructions.md": render_companion(scan, "GitHub Copilot"),
-        ".cursor/rules/agent-ready.mdc": render_cursor_rule(scan),
         ".agent-ready/report.md": render_report(scan),
         ".agent-ready/agent-ready.json": json.dumps(asdict(scan), indent=2, ensure_ascii=False),
     }
+    if companion:
+        outputs.update(
+            {
+                "CLAUDE.md": render_companion(scan, "Claude Code"),
+                "GEMINI.md": render_companion(scan, "Gemini CLI"),
+                ".github/copilot-instructions.md": render_companion(scan, "GitHub Copilot"),
+                ".cursor/rules/agent-ready.mdc": render_cursor_rule(scan),
+            }
+        )
     statuses: dict[str, str] = {}
     for relative, content in outputs.items():
         statuses[relative] = write_file(root / relative, content, force=force)
@@ -1121,6 +1135,7 @@ def main(argv: list[str] | None = None) -> int:
     ready_parser = subparsers.add_parser("ready", help="Scan, generate files, and print the readiness report.")
     ready_parser.add_argument("repo", nargs="?", type=Path, default=Path("."))
     ready_parser.add_argument("--force", action="store_true", help="Overwrite existing generated files.")
+    ready_parser.add_argument("--minimal", action="store_true", help="Generate only AGENTS.md and .agent-ready core reports.")
     ready_parser.add_argument("--demo", action="store_true", help="Generate .agent-ready/demo.md.")
     ready_parser.add_argument("--badge", action="store_true", help="Insert or update the Agent Ready badge in README.md.")
     ready_parser.add_argument("--mcp", action="store_true", help="Generate MCP recommendations.")
@@ -1191,6 +1206,7 @@ def main(argv: list[str] | None = None) -> int:
     gen_parser = subparsers.add_parser("generate", help="Generate agent instruction files and report.")
     gen_parser.add_argument("repo", nargs="?", type=Path, default=Path("."))
     gen_parser.add_argument("--force", action="store_true", help="Overwrite existing generated files.")
+    gen_parser.add_argument("--minimal", action="store_true", help="Generate only AGENTS.md and .agent-ready core reports.")
     gen_parser.add_argument("--json", action="store_true", help="Print JSON instead of text.")
 
     validate_parser = subparsers.add_parser("validate", help="Run detected validation commands and write a validation report.")
@@ -1345,7 +1361,7 @@ def main(argv: list[str] | None = None) -> int:
         print_doctor(data, as_json=args.json)
         return 0 if data["passed"] else 1
     if args.command in {"ready", "generate"}:
-        scan, statuses = generate_files(args.repo, force=args.force)
+        scan, statuses = generate_files(args.repo, force=args.force, companion=not args.minimal)
         if args.command == "ready":
             include_all = getattr(args, "all", False)
             extra = generate_extra_files(

@@ -2,6 +2,21 @@
 
 All notable changes to Agent Ready are documented here.
 
+## 1.1.0 - 2026-06-09
+
+### Added
+
+- Low-noise `--minimal` generation mode for teams that want only `AGENTS.md` and core `.agent-ready` reports.
+- AGENTS.md quality scoring so instruction files earn points for command coverage, project map, safety guidance, and maintainability.
+- Strict 100-point scorecard, replacing the previous raw-score cap behavior.
+- Validation reports now make `--dry-run` safety status explicit.
+
+### Changed
+
+- README now documents honest limits, security boundaries, heuristic detection limits, and the fact that Agent Ready is not an agent framework.
+- PR package validation guidance now recommends `agent-ready validate <repo> --dry-run` before executing detected commands.
+- GitHub Action example now pins to an exact release tag.
+
 ## 1.0.0 - 2026-06-09
 
 ### Added

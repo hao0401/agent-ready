@@ -52,6 +52,8 @@ Package-level projects:
 If a command is marked "Not detected", inspect package metadata or CI config before
 claiming it works.
 
+If `python` is not available on macOS or Linux, run the same command with `python3`.
+
 ## Agent Workflow
 
 1. Read this file before editing.

@@ -1,5 +1,7 @@
 # Agent Ready Validation
 
+Dry run only: no commands were executed.
+
 - [planned] `pnpm test` in `examples/demo-repo` (0s)
 - [planned] `pnpm build` in `examples/demo-repo` (0s)
 - [planned] `pnpm lint` in `examples/demo-repo` (0s)
