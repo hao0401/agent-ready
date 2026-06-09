@@ -825,7 +825,7 @@ class AgentReadyTests(unittest.TestCase):
             agent_ready.main(["--version"])
 
         self.assertEqual(raised.exception.code, 0)
-        self.assertIn("agent-ready 0.1.0", output.getvalue())
+        self.assertIn("agent-ready 1.0.0", output.getvalue())
 
     def test_check_passes_after_generation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

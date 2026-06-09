@@ -436,6 +436,7 @@ def verify_sdist_contents() -> None:
             required_suffixes = [
                 "README.md",
                 "LICENSE",
+                "CHANGELOG.md",
                 "CONTRIBUTING.md",
                 "SECURITY.md",
                 "AGENTS.md",

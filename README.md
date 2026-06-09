@@ -10,6 +10,7 @@ readiness scoring, GitHub annotations, PR artifacts, CI gates, and a public badg
 <p>
   <a href="https://github.com/hao0401/agent-ready/actions/workflows/test.yml"><img alt="Test" src="https://github.com/hao0401/agent-ready/actions/workflows/test.yml/badge.svg"></a>
   <a href="https://github.com/hao0401/agent-ready/actions/workflows/action-smoke.yml"><img alt="Action Smoke" src="https://github.com/hao0401/agent-ready/actions/workflows/action-smoke.yml/badge.svg"></a>
+  <a href="https://github.com/hao0401/agent-ready/releases"><img alt="Release" src="https://img.shields.io/github/v/release/hao0401/agent-ready?sort=semver"></a>
   <img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-blue">
   <img alt="No runtime dependencies" src="https://img.shields.io/badge/runtime%20deps-0-brightgreen">
   <img alt="Safe by default" src="https://img.shields.io/badge/overwrite-safe%20by%20default-0f766e">
@@ -383,6 +384,7 @@ make publish-check
 Project references:
 
 - License: [`LICENSE`](LICENSE)
+- Changelog: [`CHANGELOG.md`](CHANGELOG.md)
 - Contributing guide: [`CONTRIBUTING.md`](CONTRIBUTING.md)
 - Security policy: [`SECURITY.md`](SECURITY.md)
 - Package config: [`pyproject.toml`](pyproject.toml)
